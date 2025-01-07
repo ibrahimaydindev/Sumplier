@@ -15,3 +15,7 @@
 .idea/kotlinc.xml
 .idea/misc.xml
 .idea/vcs.xml
+/.gradle
+/.idea
+local.properties
+local.properties
