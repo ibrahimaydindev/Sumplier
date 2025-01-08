@@ -2,18 +2,18 @@ package com.sumplier.app.api
 
 import android.util.Log
 import com.sumplier.app.data.User
-import com.sumplier.app.interfaces.ApiService
+import com.sumplier.app.interfaces.UserApiService
 import com.sumplier.app.utils.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ApiManager {
-    private val apiService: ApiService = RetrofitClient.getClient().create(ApiService::class.java)
+class UserApiManager {
+    private val userApiService: UserApiService = RetrofitClient.getClient().create(UserApiService::class.java)
 
     fun loginUser(email: String, password: String, loginType: Int, onResult: (User?) -> Unit) {
 
-        val call = apiService.getUserLogin(email, password, loginType)
+        val call = userApiService.getUserLogin(email, password, loginType)
         call.enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
