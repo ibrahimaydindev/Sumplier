@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://api.sumplier.com/api/" // BaseUrl
+    private const val BASE_URL = "https://api.sumplier.com/SumplierAPI/" // BaseUrl
     private var retrofit: Retrofit? = null
 
     fun getClient(): Retrofit {

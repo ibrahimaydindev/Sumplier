@@ -1,4 +1,4 @@
-package com.sumplier.app.interfaces
+package com.sumplier.app.interfaces.apiService
 
 import com.sumplier.app.data.User
 import retrofit2.Call
