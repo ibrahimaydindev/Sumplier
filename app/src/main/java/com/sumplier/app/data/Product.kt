@@ -1,18 +1,18 @@
 package com.sumplier.app.data
 
-data class Product(
-    private val id: Int?,
-    private val categoryCode: String?,
-    private val productCode: String?,
-    private val productName: String?,
-    private val price: Double?,
-    private val price2: Double?,
-    private val price3: Double?,
-    private val taxRate: Double?,
-    private val taxRate2: Double?,
-    private val taxRate3: Double?,
-    private val image: String?,
-    private val description: String?,
-    private val isActive: Boolean?,
-    private val companyCode: String?,
+class Product(
+    val id: Int?,
+    val categoryCode: String?,
+    val productCode: String?,
+    val productName: String?,
+    val price: Double?,
+    val price2: Double?,
+    val price3: Double?,
+    val taxRate: Double?,
+    val taxRate2: Double?,
+    val taxRate3: Double?,
+    val image: String?,
+    val description: String?,
+    val isActive: Boolean?,
+    val companyCode: String?,
 )
