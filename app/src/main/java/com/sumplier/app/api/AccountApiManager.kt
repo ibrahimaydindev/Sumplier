@@ -1,7 +1,7 @@
 package com.sumplier.app.api
 
 import android.util.Log
-import com.sumplier.app.data.CompanyAccount
+import com.sumplier.app.model.CompanyAccount
 import com.sumplier.app.interfaces.apiService.AccountApiService
 import com.sumplier.app.utils.RetrofitClient
 import retrofit2.Call

@@ -1,8 +1,11 @@
 package com.sumplier.app.interfaces.apiService
 
-import com.sumplier.app.data.Ticket
+import com.sumplier.app.model.Ticket
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface TicketApiService {
@@ -23,4 +26,9 @@ interface TicketApiService {
         @Query("StartDateTime") startDateTime: String,
         @Query("EndDateTime") endDateTime: String
     ): Call<List<Ticket>>
+
+    @POST("Ticket/PostTicket")
+    @Headers("Content-Type: application/json")
+    fun postTicket(@Body ticket: Ticket
+    ): Call<Ticket>
 }

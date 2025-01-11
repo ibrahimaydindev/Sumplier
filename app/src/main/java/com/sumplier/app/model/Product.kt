@@ -1,4 +1,4 @@
-package com.sumplier.app.data
+package com.sumplier.app.model
 
 class Product(
     val id: Int?,

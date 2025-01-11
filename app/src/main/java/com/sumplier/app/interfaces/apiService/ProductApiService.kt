@@ -1,6 +1,6 @@
 package com.sumplier.app.interfaces.apiService
 
-import com.sumplier.app.data.Product
+import com.sumplier.app.model.Product
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
