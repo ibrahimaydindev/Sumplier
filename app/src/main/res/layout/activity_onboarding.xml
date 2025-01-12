@@ -7,4 +7,46 @@
     android:layout_height="match_parent"
     tools:context=".activity.OnboardingActivity">
 
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Progress View -->
+        <include
+            android:id="@+id/progressView"
+            layout="@layout/view_progress" />
+
+        <!-- Login View -->
+        <include
+            android:id="@+id/loginView"
+            layout="@layout/view_login" />
+
+        <!-- Reset Password Email View -->
+        <include
+            android:id="@+id/resetPasswordEmailView"
+            layout="@layout/reset_password_email" />
+
+        <!-- Reset Password Code View -->
+        <include
+            android:id="@+id/resetPasswordCodeView"
+            layout="@layout/view_reset_password" />
+
+        <!-- New Password View -->
+        <include
+            android:id="@+id/newPasswordView"
+            layout="@layout/view_new_password" />
+
+        <!-- Success View -->
+        <include
+            android:id="@+id/successView"
+            layout="@layout/view_success" />
+
+        <!-- Fail View -->
+        <include
+            android:id="@+id/failView"
+            layout="@layout/view_fail" />
+
+    </ViewFlipper>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
