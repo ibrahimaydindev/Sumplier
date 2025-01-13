@@ -1,8 +1,11 @@
 package com.sumplier.app.app
 
 import android.app.Application
-import com.sumplier.app.data.DataStorage
+import com.sumplier.app.data.database.PreferencesHelper
+import dagger.hilt.android.HiltAndroidApp
 
+
+@HiltAndroidApp
 class App : Application() {
     companion object {
         lateinit var instance: App
@@ -14,6 +17,6 @@ class App : Application() {
         instance = this
 
         // Start data storage
-        DataStorage.init(this)
+        PreferencesHelper.init(this)
     }
 }
