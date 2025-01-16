@@ -12,15 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Company Login View -->
+        <include
+            android:id="@+id/companyLoginView"
+            layout="@layout/view_company_login" />
+
         <!-- Progress View -->
         <include
             android:id="@+id/progressView"
             layout="@layout/view_progress" />
 
-        <!-- Login View -->
+        <!-- Company Login View -->
         <include
-            android:id="@+id/loginView"
-            layout="@layout/view_login" />
+            android:id="@+id/userLoginView"
+            layout="@layout/view_user_login" />
 
         <!-- Reset Password Email View -->
         <include
