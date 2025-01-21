@@ -18,7 +18,7 @@ class AnimationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         handler.postDelayed({
-            val intent = Intent(this@AnimationActivity, ReceptionActivity::class.java)
+            val intent = Intent(this@AnimationActivity, OnboardingActivity::class.java)
             startActivity(intent)
             finish()
         }, 3000)
