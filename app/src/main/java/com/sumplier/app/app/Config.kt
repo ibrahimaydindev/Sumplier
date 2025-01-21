@@ -3,6 +3,7 @@ package com.sumplier.app.app
 import com.sumplier.app.data.database.PreferencesHelper
 import com.sumplier.app.data.enums.ConfigKey
 import com.sumplier.app.data.model.Category
+import com.sumplier.app.data.model.Company
 import com.sumplier.app.data.model.Product
 import com.sumplier.app.data.model.User
 
@@ -35,6 +36,8 @@ class Config private constructor() {
     fun getCurrentUser(): User? = getDataFromPrefs(ConfigKey.USER, User::class.java)
 
     fun setCurrentUser(user: User?) = setDataToPrefs(ConfigKey.USER, user)
+
+    fun setCurrentCompany(company: Company?) = setDataToPrefs(ConfigKey.COMPANY, company)
 
     fun getCurrentCategory(): Category? = getDataFromPrefs(ConfigKey.CATEGORY, Category::class.java)
 

@@ -8,15 +8,22 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.sumplier.app.R
+import com.sumplier.app.app.Config
+import com.sumplier.app.data.api.managers.CompanyApiManager
+import com.sumplier.app.data.api.managers.UserApiManager
+import com.sumplier.app.data.database.PreferencesHelper
+import com.sumplier.app.data.enums.ConfigKey
 import com.sumplier.app.data.enums.ConfigState
+import com.sumplier.app.data.model.Company
+import com.sumplier.app.data.model.User
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
 
 internal enum class OnboardingPages {
     PROGRESS,
@@ -35,6 +42,8 @@ class OnboardingActivity : AppCompatActivity() {
     private lateinit var btnCompanyLogin: ConstraintLayout
     private lateinit var btnUserLogin: ConstraintLayout
 
+    private lateinit var btnUserLoginText: TextView
+    private lateinit var btnCompanyLoginText: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,10 +65,8 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun setUpCompanyLoginScreen() {
 
-        val loginButtonText: TextView = findViewById(R.id.companyLogin_button_text)
-
-
         btnCompanyLogin = findViewById(R.id.btnCompanyLogin)
+        btnCompanyLoginText = findViewById(R.id.companyLogin_button_text)
         btnCompanyLogin.setOnClickListener {
             val email = findViewById<TextInputEditText>(R.id.etEmail)?.text.toString()
             val password = findViewById<TextInputEditText>(R.id.etPassword)?.text.toString()
@@ -67,8 +74,8 @@ class OnboardingActivity : AppCompatActivity() {
             when {
                 else -> {
                     btnCompanyLogin.isEnabled = false
-                    loginButtonText.text = "Giriş yapılıyor..."
-                    fetchCompany(email, password, 1)
+                    btnCompanyLoginText.text = "Giriş yapılıyor..."
+                    fetchCompany(email, password)
                 }
             }
         }
@@ -81,19 +88,19 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun setUpUserLoginScreen() {
 
-        val loginButtonText: TextView = findViewById(R.id.userLogin_button_text)
 
 
         btnUserLogin = findViewById(R.id.btnLoginUser)
+        btnUserLoginText = findViewById(R.id.userLogin_button_text)
         btnUserLogin.setOnClickListener {
-            val email = findViewById<TextInputEditText>(R.id.etEmail)?.text.toString()
-            val password = findViewById<TextInputEditText>(R.id.etPassword)?.text.toString()
+            val email = findViewById<TextInputEditText>(R.id.etEmailUser)?.text.toString()
+            val password = findViewById<TextInputEditText>(R.id.etPasswordUser)?.text.toString()
 
             when {
                 else -> {
                     btnUserLogin.isEnabled = false
-                    loginButtonText.text = "Giriş yapılıyor..."
-                    fetchCompany(email, password, 1)
+                    btnUserLoginText.text = "Giriş yapılıyor..."
+                    fetchUser(email, password)
                 }
             }
         }
@@ -139,8 +146,8 @@ class OnboardingActivity : AppCompatActivity() {
                 Log.e("Onboarding", "state: $currentState")
 
                 when (currentState) {
-                    ConfigState.COMPANY -> checkSetCompany()
-                    ConfigState.USER -> userLogin()
+                    ConfigState.COMPANY -> handleCompanyLogin()
+                    ConfigState.USER -> handleUserLogin()
                     //ConfigState.PRODUCTS -> fetchProductData()
                     ConfigState.COMPLETED -> navigateToMain()
                     else -> Log.e("Onboarding", "Bilinmeyen state: $currentState")
@@ -151,39 +158,95 @@ class OnboardingActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun checkSetCompany() {
+    private fun fetchCompany(email: String, password: String) {
 
-        setView(OnboardingPages.PROGRESS)
-        delay(4000)
-        setView(OnboardingPages.COMPANY_LOGIN)
-        delay(4000)
+        val companyApiManager = CompanyApiManager()
 
-        currentState = ConfigState.USER
-        processCurrentState()
+        try {
+            companyApiManager.loginCompany(email, password) { company ->
 
+                if (company != null && company.id != 0) {
+                    PreferencesHelper.saveData(ConfigKey.COMPANY, company)
+                    currentState = ConfigState.USER
+                    processCurrentState()
+                } else {
+                    showError("Email veya şifre hatalı")
+                    btnCompanyLogin.isEnabled = true
+                    btnCompanyLoginText.text = "Giriş Yap"
+                }
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
     }
 
-    private suspend fun userLogin() {
+    private fun fetchUser(email: String, password: String) {
 
-        setView(OnboardingPages.PROGRESS)
-        delay(4000)
+        val userApiManager = UserApiManager()
+
+        try {
+            userApiManager.loginUser(email, password) { user ->
+
+                if (user != null && user.id != 0) {
+                    PreferencesHelper.saveData(ConfigKey.USER, user)
+                    currentState = ConfigState.COMPLETED
+                    showToastMessage("Giriş başarılı")
+                    processCurrentState()
+                } else {
+                    showError("Email veya şifre hatalı")
+                    btnUserLogin.isEnabled = true
+                    btnUserLoginText.text = "Giriş Yap"
+                }
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun handleCompanyLogin() {
+
+        val company: Company? = PreferencesHelper.getData(ConfigKey.COMPANY, Company::class.java)
+
+        if (company != null) {
+            currentState = ConfigState.USER
+            processCurrentState()
+            return
+        }
+
+    }
+
+    private fun handleUserLogin() {
 
         setView(OnboardingPages.USER_LOGIN)
-        delay(4000)
 
-        currentState = ConfigState.COMPLETED
-        processCurrentState()
+        val user: User? = PreferencesHelper.getData(ConfigKey.USER, User::class.java)
+
+        if (user != null) {
+            currentState = ConfigState.COMPLETED
+            processCurrentState()
+            return
+        }
+
     }
 
-    private fun fetchCompany(email: String, password: String, loginType: Int) {
 
+    private fun showError(message: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Hata")
+            .setMessage(message)
+            .setPositiveButton("Tamam") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
 
-    private suspend fun navigateToMain() {
-
-        delay(4000)
+    private fun navigateToMain() {
 
         Log.d("Onboarding", "Tüm veriler başarıyla yüklendi")
         val intent = Intent(this, MainActivity::class.java)

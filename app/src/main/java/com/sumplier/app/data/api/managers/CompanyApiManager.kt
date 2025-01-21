@@ -1,21 +1,24 @@
 package com.sumplier.app.data.api.managers
 
 import android.util.Log
+import com.sumplier.app.data.api.apiservice.CompanyApiService
 import com.sumplier.app.data.api.apiservice.UserApiService
 import com.sumplier.app.data.api.retrofit.RetrofitClient
+import com.sumplier.app.data.model.Company
 import com.sumplier.app.data.model.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserApiManager {
-    private val userApiService: UserApiService = RetrofitClient.getClient().create(UserApiService::class.java)
+class CompanyApiManager {
 
-    fun loginUser(email: String, password: String, onResult: (User?) -> Unit) {
+    private val companyApiService: CompanyApiService = RetrofitClient.getClient().create(CompanyApiService::class.java)
 
-        val call = userApiService.getUserLogin(email, password)
-        call.enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+    fun loginCompany(email: String, password: String, onResult: (Company?) -> Unit) {
+
+        val call = this.companyApiService.getCompanyLogin(email, password)
+        call.enqueue(object : Callback<Company> {
+            override fun onResponse(call: Call<Company>, response: Response<Company>) {
                 if (response.isSuccessful) {
                     val user = response.body()
                     if (user?.id != 0) {
@@ -29,7 +32,7 @@ class UserApiManager {
                 }
             }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
+            override fun onFailure(call: Call<Company>, t: Throwable) {
                 Log.e("UserApiManager", "Failure: ${t.message}")
                 onResult(null)
             }
@@ -37,3 +40,4 @@ class UserApiManager {
     }
 
 }
+
