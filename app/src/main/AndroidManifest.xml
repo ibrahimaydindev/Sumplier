@@ -18,7 +18,9 @@
 
         <activity
 
-            android:name=".presentation.activity.OnboardingActivity"
+            android:name=".presentation.activity.OnboardingActivity" />
+        <activity
+            android:name=".presentation.activity.AnimationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +28,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+
         <activity
             android:name=".presentation.activity.ReceptionActivity"
             android:exported="true">
