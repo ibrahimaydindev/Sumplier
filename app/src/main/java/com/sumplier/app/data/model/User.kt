@@ -9,4 +9,6 @@ data class User(
     val loginType: Int?,
     val isActive: Boolean?,
     val companyCode: Int?,
+    val roleCode: String?,
+    val resellerCode: String?,
 )
