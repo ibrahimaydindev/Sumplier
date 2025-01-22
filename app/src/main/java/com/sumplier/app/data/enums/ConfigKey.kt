@@ -4,6 +4,8 @@ enum class ConfigKey {
     USER,
     CATEGORY,
     COMPANY,
+    MENU,
+    ACCOUNT,
     COMPANY_ACCOUNT,
     COMPANY_DEVICE,
     COMPANY_LICENCE,
