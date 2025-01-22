@@ -15,13 +15,14 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
+import com.sumplier.app.data.api.managers.AccountApiManager
 import com.sumplier.app.data.api.managers.CompanyApiManager
+import com.sumplier.app.data.api.managers.MenuApiManager
 import com.sumplier.app.data.api.managers.UserApiManager
 import com.sumplier.app.data.database.PreferencesHelper
 import com.sumplier.app.data.enums.ConfigKey
 import com.sumplier.app.data.enums.ConfigState
 import com.sumplier.app.data.model.Company
-import com.sumplier.app.data.model.User
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -53,10 +54,8 @@ class OnboardingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_onboarding)
 
         viewFlipper = findViewById(R.id.viewFlipper)
-        setUpCompanyLoginScreen()
-        setUpUserLoginScreen()
-        setupViews()
 
+        setupViews()
         processCurrentState()
 
 
@@ -88,8 +87,6 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun setUpUserLoginScreen() {
 
-
-
         btnUserLogin = findViewById(R.id.btnLoginUser)
         btnUserLoginText = findViewById(R.id.userLogin_button_text)
         btnUserLogin.setOnClickListener {
@@ -113,6 +110,9 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun setupViews() {
 
+        setUpCompanyLoginScreen()
+        setUpUserLoginScreen()
+
         // Reset Password Email View
         findViewById<Button>(R.id.btnSendCode)?.setOnClickListener {
             val email = findViewById<TextInputEditText>(R.id.etEmail)?.text.toString()
@@ -125,10 +125,13 @@ class OnboardingActivity : AppCompatActivity() {
             setView(OnboardingPages.USER_LOGIN)
         }
 
-
     }
 
     private fun setView(page: OnboardingPages) {
+        // Sağdan sola doğru animasyon
+        viewFlipper.setInAnimation(this, R.anim.slide_in_right)
+        viewFlipper.setOutAnimation(this, R.anim.slide_out_left)
+        
         viewFlipper.displayedChild = when (page) {
             OnboardingPages.COMPANY_LOGIN -> 0
             OnboardingPages.PROGRESS -> 1
@@ -136,7 +139,6 @@ class OnboardingActivity : AppCompatActivity() {
             OnboardingPages.RESET_PASSWORD_EMAIL -> 3
             OnboardingPages.RESET_PASSWORD_CODE -> 4
             OnboardingPages.NEW_PASSWORD -> 5
-
         }
     }
 
@@ -148,6 +150,8 @@ class OnboardingActivity : AppCompatActivity() {
                 when (currentState) {
                     ConfigState.COMPANY -> handleCompanyLogin()
                     ConfigState.USER -> handleUserLogin()
+                    ConfigState.MENUS -> fetchMenus()
+                    ConfigState.ACCOUNT -> fetchAccounts()
                     //ConfigState.PRODUCTS -> fetchProductData()
                     ConfigState.COMPLETED -> navigateToMain()
                     else -> Log.e("Onboarding", "Bilinmeyen state: $currentState")
@@ -157,6 +161,67 @@ class OnboardingActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun fetchMenus(){
+
+        val company : Company? = Config.getInstance().getCompany()
+
+        if (company != null){
+
+            val menuApiManager = MenuApiManager()
+
+            try {
+                menuApiManager.getMenus(company.companyCode, company.resellerCode) { menus ->
+
+                    if (menus != null) {
+
+                        Log.i("Onboarding", "menus : $menus")
+
+                        PreferencesHelper.saveData(ConfigKey.MENU, menus)
+                        currentState = ConfigState.ACCOUNT
+                        processCurrentState()
+                    } else {
+                        showError("Menu alınırken bir hata oluştu")
+
+                    }
+
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }
+    }
+
+    private fun fetchAccounts(){
+
+        val company : Company? = Config.getInstance().getCompany()
+
+        if (company != null){
+
+            val accountApiManager = AccountApiManager()
+
+            try {
+                accountApiManager.getAccounts(company.companyCode, company.resellerCode) { accounts ->
+
+                    if (accounts != null) {
+
+                        Log.i("Onboarding", "acounts : $accounts")
+
+                        PreferencesHelper.saveData(ConfigKey.ACCOUNT, accounts)
+                        currentState = ConfigState.COMPLETED
+                        processCurrentState()
+                    } else {
+                        showError("Account alınırken bir hata oluştu")
+                    }
+
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 
     private fun fetchCompany(email: String, password: String) {
 
@@ -191,7 +256,8 @@ class OnboardingActivity : AppCompatActivity() {
 
                 if (user != null && user.id != 0) {
                     PreferencesHelper.saveData(ConfigKey.USER, user)
-                    currentState = ConfigState.COMPLETED
+                    currentState = ConfigState.MENUS
+                    setView(OnboardingPages.PROGRESS)
                     showToastMessage("Giriş başarılı")
                     processCurrentState()
                 } else {
@@ -209,13 +275,13 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun handleCompanyLogin() {
 
-        val company: Company? = PreferencesHelper.getData(ConfigKey.COMPANY, Company::class.java)
-
-        if (company != null) {
-            currentState = ConfigState.USER
-            processCurrentState()
-            return
-        }
+        //val company: Company? = PreferencesHelper.getData(ConfigKey.COMPANY, Company::class.java)
+//
+        //if (company != null) {
+        //    currentState = ConfigState.USER
+        //    processCurrentState()
+        //    return
+        //}
 
     }
 
@@ -223,13 +289,13 @@ class OnboardingActivity : AppCompatActivity() {
 
         setView(OnboardingPages.USER_LOGIN)
 
-        val user: User? = PreferencesHelper.getData(ConfigKey.USER, User::class.java)
-
-        if (user != null) {
-            currentState = ConfigState.COMPLETED
-            processCurrentState()
-            return
-        }
+        //val user: User? = PreferencesHelper.getData(ConfigKey.USER, User::class.java)
+        //
+        //if (user != null) {
+        //    currentState = ConfigState.COMPLETED
+        //    processCurrentState()
+        //    return
+        //}
 
     }
 
@@ -246,7 +312,9 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
 
-    private fun navigateToMain() {
+    private suspend fun navigateToMain() {
+
+        delay(3000)
 
         Log.d("Onboarding", "Tüm veriler başarıyla yüklendi")
         val intent = Intent(this, MainActivity::class.java)

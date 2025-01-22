@@ -34,6 +34,7 @@ class Config private constructor() {
     }
 
     fun getCurrentUser(): User? = getDataFromPrefs(ConfigKey.USER, User::class.java)
+    fun getCompany(): Company? = getDataFromPrefs(ConfigKey.COMPANY, Company::class.java)
 
     fun setCurrentUser(user: User?) = setDataToPrefs(ConfigKey.USER, user)
 
