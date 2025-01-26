@@ -2,14 +2,15 @@ package com.sumplier.app.app
 
 import com.sumplier.app.data.database.PreferencesHelper
 import com.sumplier.app.data.enums.ConfigKey
-import com.sumplier.app.data.model.Category
 import com.sumplier.app.data.model.Company
-import com.sumplier.app.data.model.Product
+import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.User
 
 class Config private constructor() {
 
     private val cachedData = mutableMapOf<ConfigKey, Any?>()
+    var user:User? = null
+    var company:Company? = null
 
     companion object {
         @Volatile
@@ -22,35 +23,28 @@ class Config private constructor() {
         }
     }
 
-    private fun <T> getDataFromPrefs(key: ConfigKey, classType: Class<T>): T? {
-        return cachedData[key] as? T ?: PreferencesHelper.getData(key, classType)?.also {
-            cachedData[key] = it
-        }
+    fun getCurrentUser(): User? {
+
+        if (user != null)
+            return user
+
+        return PreferencesHelper.getData(ConfigKey.USER, User::class.java)
     }
 
-    private fun <T> setDataToPrefs(key: ConfigKey, data: T?) {
-        cachedData[key] = data
-        PreferencesHelper.saveData(key, data)
+    fun getCurrentCompany(): Company? {
+
+        if (company != null)
+            return company
+
+        return PreferencesHelper.getData(ConfigKey.COMPANY, Company::class.java)
     }
 
-    fun getCurrentUser(): User? = getDataFromPrefs(ConfigKey.USER, User::class.java)
-    fun getCompany(): Company? = getDataFromPrefs(ConfigKey.COMPANY, Company::class.java)
+    fun getCompanyAccounts(): List<CompanyAccount>? {
 
-    fun setCurrentUser(user: User?) = setDataToPrefs(ConfigKey.USER, user)
-
-    fun setCurrentCompany(company: Company?) = setDataToPrefs(ConfigKey.COMPANY, company)
-
-    fun getCurrentCategory(): Category? = getDataFromPrefs(ConfigKey.CATEGORY, Category::class.java)
-
-    fun setCurrentCategory(category: Category?) = setDataToPrefs(ConfigKey.CATEGORY, category)
-
-    fun getCurrentProductList(): List<*>? = getDataFromPrefs(ConfigKey.PRODUCT, List::class.java)
-
-    fun setCurrentProductList(products: List<Product>?) =
-        setDataToPrefs(ConfigKey.PRODUCT, products)
+        return PreferencesHelper.getListData(ConfigKey.COMPANY_ACCOUNT, CompanyAccount::class.java)
+    }
 
     fun clearAll() {
-        cachedData.clear()
         PreferencesHelper.clearAllData()
     }
 

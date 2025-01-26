@@ -12,6 +12,5 @@ interface CategoryApiService {
     fun getCategories(
         @Query("CompanyCode") companyCode: String?,
         @Query("ResellerCode") resellerCode: String?,
-        @Query("MenuCode") menuCode: String?,
     ): Call<List<Category>>
 }
