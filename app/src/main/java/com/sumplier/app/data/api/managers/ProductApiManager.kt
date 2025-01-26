@@ -1,41 +1,36 @@
 package com.sumplier.app.data.api.managers
 
 import android.util.Log
+import com.sumplier.app.data.api.apiservice.CategoryApiService
 import com.sumplier.app.data.api.apiservice.ProductApiService
+import com.sumplier.app.data.api.retrofit.RetrofitClient
+import com.sumplier.app.data.model.Category
 import com.sumplier.app.data.model.Product
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class ProductApiManager(private val productApiService: ProductApiService) {
+class ProductApiManager {
 
-    suspend fun getProductAll(companyCode: String): List<Product>? {
-        return try {
-            val response = productApiService.getProductAll(companyCode)
-            if (response.isSuccessful) {
-                response.body()
-            } else {
-                Log.e("ProductApiManager", "Error: ${response.code()} - ${response.message()}")
-                null
+    private val productApiService: ProductApiService = RetrofitClient.getClient().create(ProductApiService::class.java)
+
+    fun getProductsAll(companyCode: String?, resellerCode: String?, onResult: (List<Product>?) -> Unit) {
+
+        val call = productApiService.getProductAll(companyCode, resellerCode)
+        call.enqueue(object : Callback<List<Product>> {
+            override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
+                if (response.isSuccessful) {
+                    onResult(response.body())
+                } else {
+                    Log.e("ApiManager", "Error: ${response.code()}")
+                    onResult(null)
+                }
             }
-        } catch (e: Exception) {
-            Log.e("ProductApiManager", "Failure: ${e.localizedMessage}", e)
-            null
-        }
-    }
 
-    suspend fun getProductsByCategoryCode(
-        companyCode: String,
-        categoryCode: String
-    ): List<Product>? {
-        return try {
-            val response = productApiService.getProductByCategoryCode(companyCode, categoryCode)
-            if (response.isSuccessful) {
-                response.body()
-            } else {
-                Log.e("ProductApiManager", "Error: ${response.code()} - ${response.message()}")
-                null
+            override fun onFailure(call: Call<List<Product>>, t: Throwable) {
+                Log.e("ApiManager", "Failure: ${t.message}")
+                onResult(null)
             }
-        } catch (e: Exception) {
-            Log.e("ProductApiManager", "Failure: ${e.localizedMessage}", e)
-            null
-        }
+        })
     }
 }

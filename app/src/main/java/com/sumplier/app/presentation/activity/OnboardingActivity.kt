@@ -16,14 +16,15 @@ import com.google.android.material.textfield.TextInputEditText
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
 import com.sumplier.app.data.api.managers.AccountApiManager
+import com.sumplier.app.data.api.managers.CategoryApiManager
 import com.sumplier.app.data.api.managers.CompanyApiManager
 import com.sumplier.app.data.api.managers.MenuApiManager
+import com.sumplier.app.data.api.managers.ProductApiManager
 import com.sumplier.app.data.api.managers.UserApiManager
 import com.sumplier.app.data.database.PreferencesHelper
 import com.sumplier.app.data.enums.ConfigKey
 import com.sumplier.app.data.enums.ConfigState
 import com.sumplier.app.data.model.Company
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 internal enum class OnboardingPages {
@@ -128,7 +129,7 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     private fun setView(page: OnboardingPages) {
-        // Sağdan sola doğru animasyon
+
         viewFlipper.setInAnimation(this, R.anim.slide_in_right)
         viewFlipper.setOutAnimation(this, R.anim.slide_out_left)
         
@@ -151,8 +152,9 @@ class OnboardingActivity : AppCompatActivity() {
                     ConfigState.COMPANY -> handleCompanyLogin()
                     ConfigState.USER -> handleUserLogin()
                     ConfigState.MENUS -> fetchMenus()
+                    ConfigState.CATEGORIES -> fetchCategories()
+                    ConfigState.PRODUCTS -> fetchProducts()
                     ConfigState.ACCOUNT -> fetchAccounts()
-                    //ConfigState.PRODUCTS -> fetchProductData()
                     ConfigState.COMPLETED -> navigateToMain()
                     else -> Log.e("Onboarding", "Bilinmeyen state: $currentState")
                 }
@@ -164,7 +166,7 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun fetchMenus(){
 
-        val company : Company? = Config.getInstance().getCompany()
+        val company : Company? = Config.getInstance().getCurrentCompany()
 
         if (company != null){
 
@@ -178,7 +180,7 @@ class OnboardingActivity : AppCompatActivity() {
                         Log.i("Onboarding", "menus : $menus")
 
                         PreferencesHelper.saveData(ConfigKey.MENU, menus)
-                        currentState = ConfigState.ACCOUNT
+                        currentState = ConfigState.CATEGORIES
                         processCurrentState()
                     } else {
                         showError("Menu alınırken bir hata oluştu")
@@ -195,7 +197,7 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun fetchAccounts(){
 
-        val company : Company? = Config.getInstance().getCompany()
+        val company : Company? = Config.getInstance().getCurrentCompany()
 
         if (company != null){
 
@@ -208,11 +210,69 @@ class OnboardingActivity : AppCompatActivity() {
 
                         Log.i("Onboarding", "acounts : $accounts")
 
-                        PreferencesHelper.saveData(ConfigKey.ACCOUNT, accounts)
+                        PreferencesHelper.saveData(ConfigKey.COMPANY_ACCOUNT, accounts)
                         currentState = ConfigState.COMPLETED
                         processCurrentState()
                     } else {
                         showError("Account alınırken bir hata oluştu")
+                    }
+
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun fetchCategories(){
+
+        val company : Company? = Config.getInstance().getCurrentCompany()
+
+        if (company != null){
+
+            val categoryApiManager = CategoryApiManager()
+
+            try {
+                categoryApiManager.getCategories(company.companyCode, company.resellerCode) { categories ->
+
+                    if (categories != null) {
+
+                        Log.i("Onboarding", "categories : $categories")
+
+                        PreferencesHelper.saveData(ConfigKey.CATEGORY, categories)
+                        currentState = ConfigState.PRODUCTS
+                        processCurrentState()
+                    } else {
+                        showError("Categories alınırken bir hata oluştu")
+                    }
+
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun fetchProducts(){
+
+        val company : Company? = Config.getInstance().getCurrentCompany()
+
+        if (company != null){
+
+            val productApiManager = ProductApiManager();
+
+            try {
+                productApiManager.getProductsAll(company.companyCode, company.resellerCode) { products ->
+
+                    if (products != null) {
+
+                        Log.i("Onboarding", "products : $products")
+
+                        PreferencesHelper.saveData(ConfigKey.CATEGORY, products)
+                        currentState = ConfigState.ACCOUNT
+                        processCurrentState()
+                    } else {
+                        showError("Products alınırken bir hata oluştu")
                     }
 
                 }
@@ -275,13 +335,13 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun handleCompanyLogin() {
 
-        //val company: Company? = PreferencesHelper.getData(ConfigKey.COMPANY, Company::class.java)
-//
-        //if (company != null) {
-        //    currentState = ConfigState.USER
-        //    processCurrentState()
-        //    return
-        //}
+        val company: Company? = PreferencesHelper.getData(ConfigKey.COMPANY, Company::class.java)
+
+        if (company != null) {
+            currentState = ConfigState.USER
+            processCurrentState()
+            return
+        }
 
     }
 
@@ -312,9 +372,7 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
 
-    private suspend fun navigateToMain() {
-
-        delay(3000)
+    private fun navigateToMain() {
 
         Log.d("Onboarding", "Tüm veriler başarıyla yüklendi")
         val intent = Intent(this, MainActivity::class.java)
