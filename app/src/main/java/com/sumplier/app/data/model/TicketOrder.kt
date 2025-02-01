@@ -2,7 +2,7 @@ package com.sumplier.app.data.model
 
 data class TicketOrder(
 
-    val id: Int?,
+    val id: Long,
     val ticketCode: String?,
     val productCode: String?,
     val productName: String?,

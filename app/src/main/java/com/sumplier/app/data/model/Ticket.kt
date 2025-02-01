@@ -1,7 +1,7 @@
 package com.sumplier.app.data.model
 
 data class Ticket(
-    var id: Int? = null,
+    var id: Long,
     var ticketCode: String? = null,
     var companyCode: String? = null,
     var userCode: String? = null,

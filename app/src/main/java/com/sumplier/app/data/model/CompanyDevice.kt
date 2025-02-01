@@ -2,7 +2,7 @@ package com.sumplier.app.data.model
 
 data class CompanyDevice(
 
-    val id: Int?,
+    val id: Long,
     val companyCode: String?,
     val deviceCode: String?,
     val lat: String?,

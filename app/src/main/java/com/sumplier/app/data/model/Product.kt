@@ -1,8 +1,8 @@
 package com.sumplier.app.data.model
 
 class Product(
-    val id: Int?,
-    val categoryCode: String?,
+    val id: Long,
+    val categoryCode: Long,
     val productCode: String?,
     val productName: String?,
     val price: Double?,
@@ -14,5 +14,5 @@ class Product(
     val image: String?,
     val description: String?,
     val isActive: Boolean?,
-    val companyCode: String?,
+    val companyCode: Long,
 )

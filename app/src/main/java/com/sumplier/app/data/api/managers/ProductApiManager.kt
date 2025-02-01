@@ -14,7 +14,7 @@ class ProductApiManager {
 
     private val productApiService: ProductApiService = RetrofitClient.getClient().create(ProductApiService::class.java)
 
-    fun getProductsAll(companyCode: String?, resellerCode: String?, onResult: (List<Product>?) -> Unit) {
+    fun getProductsAll(companyCode: Long, resellerCode: Long, onResult: (List<Product>?) -> Unit) {
 
         val call = productApiService.getProductAll(companyCode, resellerCode)
         call.enqueue(object : Callback<List<Product>> {

@@ -25,6 +25,7 @@ import com.sumplier.app.data.database.PreferencesHelper
 import com.sumplier.app.data.enums.ConfigKey
 import com.sumplier.app.data.enums.ConfigState
 import com.sumplier.app.data.model.Company
+import com.sumplier.app.data.model.User
 import kotlinx.coroutines.launch
 
 internal enum class OnboardingPages {
@@ -268,7 +269,7 @@ class OnboardingActivity : AppCompatActivity() {
 
                         Log.i("Onboarding", "products : $products")
 
-                        PreferencesHelper.saveData(ConfigKey.CATEGORY, products)
+                        PreferencesHelper.saveData(ConfigKey.PRODUCT, products)
                         currentState = ConfigState.ACCOUNT
                         processCurrentState()
                     } else {
@@ -290,7 +291,7 @@ class OnboardingActivity : AppCompatActivity() {
         try {
             companyApiManager.loginCompany(email, password) { company ->
 
-                if (company != null && company.id != 0) {
+                if (company != null) {
                     PreferencesHelper.saveData(ConfigKey.COMPANY, company)
                     currentState = ConfigState.USER
                     processCurrentState()
@@ -314,7 +315,7 @@ class OnboardingActivity : AppCompatActivity() {
         try {
             userApiManager.loginUser(email, password) { user ->
 
-                if (user != null && user.id != 0) {
+                if (user != null) {
                     PreferencesHelper.saveData(ConfigKey.USER, user)
                     currentState = ConfigState.MENUS
                     setView(OnboardingPages.PROGRESS)
@@ -349,13 +350,13 @@ class OnboardingActivity : AppCompatActivity() {
 
         setView(OnboardingPages.USER_LOGIN)
 
-        //val user: User? = PreferencesHelper.getData(ConfigKey.USER, User::class.java)
-        //
-        //if (user != null) {
-        //    currentState = ConfigState.COMPLETED
-        //    processCurrentState()
-        //    return
-        //}
+        val user: User? = PreferencesHelper.getData(ConfigKey.USER, User::class.java)
+
+        if (user != null) {
+            currentState = ConfigState.MENUS
+            processCurrentState()
+            return
+        }
 
     }
 
@@ -373,6 +374,12 @@ class OnboardingActivity : AppCompatActivity() {
 
 
     private fun navigateToMain() {
+
+
+        Config.getInstance().checkSetMenus()
+        Config.getInstance().checkSetCategories()
+        Config.getInstance().checkSetProducts()
+
 
         Log.d("Onboarding", "Tüm veriler başarıyla yüklendi")
         val intent = Intent(this, MainActivity::class.java)

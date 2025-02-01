@@ -15,7 +15,7 @@ class AccountApiManager {
 
     private val accountApiService: AccountApiService = RetrofitClient.getClient().create(AccountApiService::class.java)
 
-    fun getAccounts(companyCode: String?, resellerCode: String?, onResult: (List<CompanyAccount>?) -> Unit) {
+    fun getAccounts(companyCode: Long, resellerCode: Long, onResult: (List<CompanyAccount>?) -> Unit) {
 
         val call = accountApiService.getAccountsAll(companyCode, resellerCode)
         call.enqueue(object : Callback<List<CompanyAccount>> {

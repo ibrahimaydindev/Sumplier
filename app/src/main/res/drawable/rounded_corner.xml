@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <stroke
+        android:width="1dip"
+        android:color="@drawable/selector_product_button" />
+    <solid android:color="@color/white" />
+    <corners android:radius="10dp" />
+</shape>

@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="350dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:background="@color/gray"
-    android:padding="16dp">
+    android:layout_width="550dp"
+    android:layout_height="550dp"
+    android:background="@drawable/rounded_corner"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search accounts"
-        android:padding="8dp"
-        android:background="@android:drawable/editbox_background"
-        android:inputType="text"
-        android:autofillHints="Arama Yap" />
+    <ViewFlipper
+        android:id="@+id/accounts_popup_flipper"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <include layout="@layout/account_list_layout" />
+    </ViewFlipper>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvAccounts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp" />
-</LinearLayout>
+</RelativeLayout>

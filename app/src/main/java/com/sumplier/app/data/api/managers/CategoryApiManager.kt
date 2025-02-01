@@ -14,7 +14,7 @@ class CategoryApiManager {
 
     private val categoryApiService: CategoryApiService = RetrofitClient.getClient().create(CategoryApiService::class.java)
 
-    fun getCategories(companyCode: String?, resellerCode: String?, onResult: (List<Category>?) -> Unit) {
+    fun getCategories(companyCode: Long, resellerCode: Long, onResult: (List<Category>?) -> Unit) {
 
         val call = categoryApiService.getCategories(companyCode, resellerCode)
         call.enqueue(object : Callback<List<Category>> {
