@@ -1,19 +1,18 @@
 package com.sumplier.app.presentation.activity
 
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
-import com.sumplier.app.data.model.Category
 import com.sumplier.app.data.model.Company
 import com.sumplier.app.data.model.CompanyAccount
-import com.sumplier.app.data.model.Menu
-import com.sumplier.app.data.model.Product
 import com.sumplier.app.data.model.User
+import com.sumplier.app.presentation.activity.popUp.AccountSelectionPopUp
 import com.sumplier.app.presentation.activity.listener.AccountSelectionListener
 
 class MainActivity : AppCompatActivity() {
@@ -70,18 +69,25 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        //val accountPopup = AccountPopup(accounts, object : AccountSelectionListener {
-        //    override fun onAccountSelected(account: CompanyAccount) {
-//
-//
-//
-        //    }
-//
-        //    override fun onPopupDismissed() {
-        //        println("Popup kapatıldı.")
-        //    }
-        //})
-//
-        //accountPopup.show(supportFragmentManager, "AccountPopup")
+        val accountPopup = AccountSelectionPopUp.newInstance(accounts, object : AccountSelectionListener {
+            override fun onAccountSelected(account: CompanyAccount) {
+                // Seçilen hesabı işle
+                Toast.makeText(this@MainActivity, "Selected: ${account.accountName}", Toast.LENGTH_SHORT).show()
+                startActivityWithAccountId(account.id)
+            }
+
+            override fun onPopupDismissed() {
+                // Popup kapatıldığında yapılacak işlemler
+            }
+        })
+
+        accountPopup.show(supportFragmentManager, "AccountPopup")
+
+    }
+
+    fun startActivityWithAccountId(accountId: Long) {
+        val intent = Intent(this, BasketActivity::class.java)
+        intent.putExtra("account_id", accountId)  // accountId'yi Intent'e ekleyin
+        startActivity(intent)
     }
 }

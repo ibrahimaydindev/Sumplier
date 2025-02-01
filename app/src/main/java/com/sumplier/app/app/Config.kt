@@ -17,6 +17,7 @@ class Config private constructor() {
     val productMap: LongSparseArray<Product> = LongSparseArray()
     val menuMap: LongSparseArray<Menu> = LongSparseArray()
     val categoryMap: LongSparseArray<Category> = LongSparseArray()
+    val accountMap : LongSparseArray<CompanyAccount> = LongSparseArray()
 
     companion object {
         private var instance: Config? = null
@@ -78,7 +79,7 @@ class Config private constructor() {
     }
 
     /**
-     * Function: checkSetProducts()
+     * Function: checkSetMenus()
      */
     fun checkSetMenus() {
 
@@ -96,7 +97,7 @@ class Config private constructor() {
     }
 
     /**
-     * Function: checkSetProducts()
+     * Function: checkSetCategories()
      */
     fun checkSetCategories() {
 
@@ -124,6 +125,34 @@ class Config private constructor() {
 
         return menus
     }
+
+    /**
+     * Function: checkSetMenus()
+     */
+    fun checkSetAccounts() {
+
+        accountMap.clear()
+
+        val accounts: List<CompanyAccount> = PreferencesHelper.getListData(ConfigKey.COMPANY_ACCOUNT, CompanyAccount::class.java)
+            ?: return
+
+        // Check and load menus to RAM database!...
+        for (account in accounts) {
+            accountMap.put(account.id, account)
+        }
+
+    }
+
+    /**
+     * Function: getAccountById()
+     */
+    fun getAccountById(accountId:Long) :CompanyAccount?  {
+
+        return accountMap.get(accountId)
+
+    }
+
+
 
     fun getDefaultMenu():Menu{
 

@@ -379,6 +379,7 @@ class OnboardingActivity : AppCompatActivity() {
         Config.getInstance().checkSetMenus()
         Config.getInstance().checkSetCategories()
         Config.getInstance().checkSetProducts()
+        Config.getInstance().checkSetAccounts()
 
 
         Log.d("Onboarding", "Tüm veriler başarıyla yüklendi")

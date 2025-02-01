@@ -1,94 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/rounded_corner"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="400dp"
+    android:padding="16dp"
+    android:background="@drawable/rounded_corner">
 
-    <RelativeLayout
+    <!-- Kapatma Butonu -->
+    <ImageButton
+        android:id="@+id/btnClose"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:contentDescription="Close" />
+
+    <!-- Arama Çubuğu -->
+    <EditText
+        android:id="@+id/searchEditText"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnClose"
+        android:layout_marginTop="8dp"
+        android:hint="Müşteri Ara"
+        android:padding="8dp"
+        android:background="@android:drawable/edit_text"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:inputType="text"/>
 
-        <RelativeLayout
-            android:id="@+id/accounts_popup_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:id="@+id/accounts_popup_list_header_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
-
-            </RelativeLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@id/accounts_popup_list_header_container"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp">
-
-                <RelativeLayout
-                    android:id="@+id/accounts_popup_list_search_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center_vertical"
-                    android:visibility="visible"
-                    app:layout_constraintWidth_percent="0.67"
-                    tools:ignore="MissingConstraints">
-
-                    <EditText
-                        android:id="@+id/accounts_popup_search_box"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="30dp"
-                        android:autofillHints=""
-                        android:background="@null"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:paddingStart="5dp"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        tools:ignore="RtlSymmetry" />
-
-                </RelativeLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </RelativeLayout>
-
-        <ListView
-            android:id="@+id/accounts_popup_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/accounts_popup_header"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="4dp"
-            android:divider="@drawable/accounts_popuplist_divider"
-            android:dividerHeight="3dp"
-            android:fadeScrollbars="true"
-            android:paddingStart="15dp"
-            android:paddingEnd="5dp"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:scrollbarSize="0dip"
-            android:scrollbars="vertical"
-            android:visibility="visible"
-            tools:listitem="@layout/account_list_item" />
-
-
-    </RelativeLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    <!-- Hesap Listesi -->
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/searchEditText"
+        android:layout_marginTop="8dp"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"/>
+</RelativeLayout>
