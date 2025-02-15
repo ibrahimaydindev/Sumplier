@@ -67,23 +67,39 @@
             android:id="@+id/TotalPriceText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginVertical="10dp"
             android:fontFamily="@font/nunito_bold"
-            android:textSize="17sp"
+            android:text="Toplam Fiyat: "
             android:textColor="@color/white"
-            android:text="Toplam Fiyat: 2999.99"
+            android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintStart_toStartOf="@+id/onSendBasket"
+            app:layout_constraintTop_toBottomOf="@+id/onSendBasket" />
+
+        <TextView
+            android:id="@+id/totalPriceValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:fontFamily="@font/nunito_bold"
+            android:text="100.00"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/TotalPriceText"
+            app:layout_constraintTop_toBottomOf="@+id/onSendBasket" />
 
         <LinearLayout
+            android:id="@+id/onSendBasket"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
-            android:background="@drawable/yellow_basket_button_bg"
-            app:layout_constraintStart_toStartOf="@id/TotalPriceText">
+            android:background="@drawable/yellow_basket_button_bg">
 
 
             <TextView

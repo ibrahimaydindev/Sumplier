@@ -350,13 +350,13 @@ class OnboardingActivity : AppCompatActivity() {
 
         setView(OnboardingPages.USER_LOGIN)
 
-        val user: User? = PreferencesHelper.getData(ConfigKey.USER, User::class.java)
-
-        if (user != null) {
-            currentState = ConfigState.MENUS
-            processCurrentState()
-            return
-        }
+        //val user: User? = PreferencesHelper.getData(ConfigKey.USER, User::class.java)
+//
+        //if (user != null) {
+        //    currentState = ConfigState.MENUS
+        //    processCurrentState()
+        //    return
+        //}
 
     }
 

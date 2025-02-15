@@ -3,7 +3,7 @@ package com.sumplier.app.data.model
 class Product(
     val id: Long,
     val categoryCode: Long,
-    val productCode: String?,
+    val productCode: Long?,
     val productName: String?,
     val price: Double?,
     val price2: Double?,

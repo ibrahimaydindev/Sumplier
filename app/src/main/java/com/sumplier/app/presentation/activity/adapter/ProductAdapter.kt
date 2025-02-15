@@ -30,7 +30,7 @@ class ProductAdapter(
             binding.textViewProductPrice.text = "₺ ${product.price}"
             //Glide.with(binding.imageViewProduct.context).load(product.imageUrl).into(binding.imageViewProduct)
 
-            //binding.buttonAddToCart.setOnClickListener { onAddToCartClick(product) }
+            binding.productCard.setOnClickListener { onAddToCartClick(product) }
         }
     }
 

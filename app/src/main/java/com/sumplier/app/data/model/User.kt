@@ -11,4 +11,7 @@ data class User(
     val companyCode: Long,
     val roleCode: String?,
     val resellerCode: Long,
+    val image: String?,
+    val deleted: Boolean?,
+
 )
