@@ -43,12 +43,28 @@ class BasketDetailFragment : Fragment() {
 
         // Clear items butonu
         view.findViewById<ImageView>(R.id.btnClearItems)?.setOnClickListener {
-            basketItems.clear()
-            onBasketUpdated?.invoke(basketItems)
-            requireActivity().findViewById<FrameLayout>(R.id.fragmentContainer).visibility = View.GONE
-            parentFragmentManager.popBackStack()
+
+            val warningPopup = WarningPopup(
+                warningText = "Tüm sipariş kalemlerini silmek istediğinize emin misiniz?",
+                warningIcon = R.drawable.question_mark,
+                yesButtonText = "Evet",
+                noButtonText = "Hayır",
+                showNoButton = true
+            ).apply {
+                setOnYesClickListener {
+                    basketItems.clear()
+                    onBasketUpdated?.invoke(basketItems)
+                    requireActivity().findViewById<FrameLayout>(R.id.fragmentContainer).visibility = View.GONE
+                    parentFragmentManager.popBackStack()
+                }
+                setOnNoClickListener {
+                    dismiss()
+                }
+            }
+            warningPopup.show(parentFragmentManager, "WarningPopup")
         }
 
+        //Confirm Button
         view.findViewById<ConstraintLayout>(R.id.confirm_button)?.setOnClickListener {
             val confirmationPopup = ConfirmationPopup().apply {
                 setOrderList(basketItems)

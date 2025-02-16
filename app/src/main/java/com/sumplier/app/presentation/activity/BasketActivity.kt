@@ -1,10 +1,12 @@
 package com.sumplier.app.presentation.activity
 
 import BasketDetailFragment
+import WarningPopup
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -61,7 +63,7 @@ class BasketActivity : AppCompatActivity() {
 
         findViewById<LinearLayout>(R.id.onSendBasket)?.setOnClickListener {
 
-            createSendOrder()
+            openBasketDetailFragment()
         }
 
 
@@ -92,7 +94,26 @@ class BasketActivity : AppCompatActivity() {
     }
 
 
-    private fun createSendOrder() {
+    private fun openBasketDetailFragment() {
+
+        if (currentItems.isEmpty()) {
+
+            val warningPopup = WarningPopup(
+                warningText = "Sepetinizi görüntülemek için lütfen ürün ekleyiniz",
+                warningIcon = R.drawable.cancel_ic,
+                yesButtonText = "Tamam",
+                noButtonText = "",
+                showNoButton = false
+            ).apply {
+                setOnYesClickListener {
+                    dismiss()
+                }
+            }
+
+            warningPopup.show(supportFragmentManager, "WarningPopup")
+            return
+        }
+
         findViewById<FrameLayout>(R.id.fragmentContainer).visibility = View.VISIBLE
         
         val basketDetailFragment = BasketDetailFragment().apply {
