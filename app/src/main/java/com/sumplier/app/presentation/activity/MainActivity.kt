@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<LinearLayout>(R.id.buttonAccounts)?.setOnClickListener {
-
-            // accounts
+            val intent = Intent(this, AccountActivity::class.java)
+            startActivity(intent)
         }
 
         findViewById<LinearLayout>(R.id.buttonPastOrders)?.setOnClickListener {

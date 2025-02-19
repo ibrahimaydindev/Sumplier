@@ -15,14 +15,14 @@ import android.widget.ListView
 import androidx.fragment.app.DialogFragment
 import com.sumplier.app.R
 import com.sumplier.app.data.model.CompanyAccount
-import com.sumplier.app.presentation.activity.adapter.AccountAdapter
+import com.sumplier.app.presentation.activity.adapter.AccountListAdapter
 import com.sumplier.app.presentation.activity.listener.AccountSelectionListener
 
 class AccountSelectionPopUp : DialogFragment() {
 
     private var accounts: List<CompanyAccount> = listOf()
     private var listener: AccountSelectionListener? = null
-    private lateinit var adapter: AccountAdapter
+    private lateinit var adapter: AccountListAdapter
 
     companion object {
         fun newInstance(accounts: List<CompanyAccount>, listener: AccountSelectionListener): AccountSelectionPopUp {
@@ -46,7 +46,7 @@ class AccountSelectionPopUp : DialogFragment() {
         val btnClose = dialog.findViewById<ImageButton>(R.id.btnClose)
         btnClose.setOnClickListener { dismiss() }
 
-        adapter = AccountAdapter(requireContext(), accounts) { selectedAccount ->
+        adapter = AccountListAdapter(requireContext(), accounts) { selectedAccount ->
             listener?.onAccountSelected(selectedAccount)
             dismiss()
         }
