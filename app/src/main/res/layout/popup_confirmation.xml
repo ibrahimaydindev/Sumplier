@@ -2,22 +2,31 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
 
     <androidx.cardview.widget.CardView
         android:layout_width="300dp"
-        android:layout_height="400dp"
+        android:layout_height="250dp"
         android:layout_gravity="center"
-        android:padding="16dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/closeButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end"
+                android:layout_margin="16dp"
+                android:src="@drawable/cancel_ic"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="@color/gray" />
 
             <!-- Selection Page -->
             <LinearLayout
@@ -42,16 +51,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:gravity="center"
                     android:layout_marginTop="24dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/btnNo"
-                        android:layout_width="0dp"
-                        android:background="@drawable/confirm_button_bg"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:background="@drawable/past_orders_bg"
                         android:padding="5dp"
                         android:layout_weight="1">
 
@@ -60,9 +68,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
+                            android:fontFamily="@font/nunito_bold"
                             android:textSize="15sp"
                             android:gravity="center"
-                            android:text="Ödeme yaparak devam et"
+                            android:text="Ödeme al"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -70,12 +79,17 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp">
+
+                    </View>
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/btnYes"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         android:background="@drawable/new_order_card_bg"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
                         android:padding="5dp"
                         android:layout_weight="1">
 
@@ -84,9 +98,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
+                            android:fontFamily="@font/nunito_bold"
                             android:textSize="15sp"
                             android:gravity="center"
-                            android:text="Ödemesiz devam et"
+                            android:text="Tutarı cariye yaz"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

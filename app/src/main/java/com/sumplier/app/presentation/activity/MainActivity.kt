@@ -12,8 +12,8 @@ import com.sumplier.app.app.Config
 import com.sumplier.app.data.model.Company
 import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.User
-import com.sumplier.app.presentation.activity.popUp.AccountSelectionPopUp
-import com.sumplier.app.presentation.activity.listener.AccountSelectionListener
+import com.sumplier.app.presentation.popUp.AccountSelectionPopUp
+import com.sumplier.app.presentation.listener.AccountSelectionListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,7 +52,8 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<LinearLayout>(R.id.buttonPastOrders)?.setOnClickListener {
 
-            //past orders
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
         }
 
         findViewById<LinearLayout>(R.id.buttonNotifications)?.setOnClickListener {
@@ -69,7 +70,8 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val accountPopup = AccountSelectionPopUp.newInstance(accounts, object : AccountSelectionListener {
+        val accountPopup = AccountSelectionPopUp.newInstance(accounts, object :
+            AccountSelectionListener {
             override fun onAccountSelected(account: CompanyAccount) {
                 // Seçilen hesabı işle
                 Toast.makeText(this@MainActivity, "Selected: ${account.accountName}", Toast.LENGTH_SHORT).show()

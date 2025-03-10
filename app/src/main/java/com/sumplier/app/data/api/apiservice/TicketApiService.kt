@@ -12,7 +12,8 @@ import retrofit2.http.Query
 interface TicketApiService {
     @GET("Ticket/GetTicketAll")
     fun getTicketAll(
-        @Query("CompanyCode") companyCode: String
+        @Query("CompanyCode") companyCode: Long,
+        @Query("ResellerCode") resellerCode: Long
     ): Call<List<Ticket>>
 
     @GET("Ticket/GetTicketTicketCode")

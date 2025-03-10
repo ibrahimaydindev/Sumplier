@@ -22,8 +22,8 @@ import com.sumplier.app.data.model.Category
 import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.Product
 import com.sumplier.app.data.model.TicketOrder
-import com.sumplier.app.presentation.activity.adapter.CategoryAdapter
-import com.sumplier.app.presentation.activity.adapter.ProductAdapter
+import com.sumplier.app.presentation.adapter.CategoryAdapter
+import com.sumplier.app.presentation.adapter.ProductAdapter
 
 
 class BasketActivity : AppCompatActivity() {

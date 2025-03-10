@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
 import com.sumplier.app.data.model.CompanyAccount
-import com.sumplier.app.presentation.activity.adapter.AccountAdapter
+import com.sumplier.app.presentation.adapter.AccountAdapter
 import android.widget.EditText
 import android.widget.ImageView
 
@@ -65,14 +65,14 @@ class AccountActivity : AppCompatActivity() {
     }
 
     private fun handleEditClick(account: CompanyAccount) {
-        // TODO: Edit işlemlerini burada gerçekleştirin
+        // TODO: Edit işlemlerini burada gerçekleştir
     }
 
     private fun handleCashClick(account: CompanyAccount) {
-        // TODO: Cash işlemlerini burada gerçekleştirin
+        // TODO: Cash işlemlerini burada gerçekleştir
     }
 
     private fun handleItemClick(account: CompanyAccount) {
-        // TODO: Item tıklama işlemlerini burada gerçekleştirin
+        // TODO: Item tıklama işlemlerini burada gerçekleştir
     }
 }

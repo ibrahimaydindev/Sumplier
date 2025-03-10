@@ -1,4 +1,4 @@
-package com.sumplier.app.presentation.activity.adapter
+package com.sumplier.app.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

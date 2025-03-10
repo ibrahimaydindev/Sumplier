@@ -1,4 +1,4 @@
-package com.sumplier.app.presentation.activity.listener
+package com.sumplier.app.presentation.listener
 
 import com.sumplier.app.data.model.CompanyAccount
 

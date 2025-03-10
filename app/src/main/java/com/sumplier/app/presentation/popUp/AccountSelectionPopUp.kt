@@ -1,4 +1,4 @@
-package com.sumplier.app.presentation.activity.popUp
+package com.sumplier.app.presentation.popUp
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -15,8 +15,8 @@ import android.widget.ListView
 import androidx.fragment.app.DialogFragment
 import com.sumplier.app.R
 import com.sumplier.app.data.model.CompanyAccount
-import com.sumplier.app.presentation.activity.adapter.AccountListAdapter
-import com.sumplier.app.presentation.activity.listener.AccountSelectionListener
+import com.sumplier.app.presentation.adapter.AccountListAdapter
+import com.sumplier.app.presentation.listener.AccountSelectionListener
 
 class AccountSelectionPopUp : DialogFragment() {
 

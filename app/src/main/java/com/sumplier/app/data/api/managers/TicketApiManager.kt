@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.google.gson.Gson
+import com.sumplier.app.data.model.Product
 
 class TicketApiManager {
     private val ticketApiService: TicketApiService = RetrofitClient.getClient().create(TicketApiService::class.java)
@@ -35,6 +36,31 @@ class TicketApiManager {
             }
 
             override fun onFailure(call: Call<Ticket>, t: Throwable) {
+                Log.e("TicketApiManager", "Failure: ${t.message}")
+                onResult(null)
+            }
+        })
+    }
+
+    fun getTicketAll(companyCode: Long, resellerCode: Long, onResult: (List<Ticket>?) -> Unit) {
+
+        val call = ticketApiService.getTicketAll(companyCode, resellerCode)
+        call.enqueue(object : Callback<List<Ticket>> {
+            override fun onResponse(call:Call<List<Ticket>>, response: Response<List<Ticket>>) {
+                if (response.isSuccessful) {
+                    val ticket1 = response.body()
+                    if (ticket1 != null) {
+                        onResult(ticket1)
+                    } else {
+                        onResult(null)
+                    }
+                } else {
+                    Log.e("TicketApiManager", "Error: ${response.code()}")
+                    onResult(null)
+                }
+            }
+
+            override fun onFailure(call: Call<List<Ticket>>, t: Throwable) {
                 Log.e("TicketApiManager", "Failure: ${t.message}")
                 onResult(null)
             }

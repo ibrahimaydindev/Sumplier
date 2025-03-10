@@ -1,5 +1,6 @@
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -7,14 +8,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.sumplier.app.R
+import com.sumplier.app.app.Config
+import com.sumplier.app.data.api.managers.TicketApiManager
+import com.sumplier.app.data.model.Ticket
 import com.sumplier.app.data.model.TicketOrder
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ConfirmationPopup : DialogFragment() {
+    interface OnConfirmationListener {
+        fun onConfirmed(orders: List<TicketOrder>, ticketCode: Long?)
+    }
+
     private var currentPage = 0 // 0: Selection, 1: Progress, 2: Success, 3: Fail
-    private var onConfirmed: ((List<TicketOrder>) -> Unit)? = null
+    private var confirmationListener: OnConfirmationListener? = null
     private var orderList: List<TicketOrder> = emptyList()
     private var onSuccess: (() -> Unit)? = null
 
@@ -22,6 +34,7 @@ class ConfirmationPopup : DialogFragment() {
         return inflater.inflate(R.layout.popup_confirmation, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -29,11 +42,57 @@ class ConfirmationPopup : DialogFragment() {
 
         view.findViewById<ConstraintLayout>(R.id.btnYes)?.setOnClickListener {
             showProgress()
-            onConfirmed?.invoke(orderList)
+            createSendOrder()
+
         }
 
         view.findViewById<ConstraintLayout>(R.id.btnNo)?.setOnClickListener {
             dismiss()
+        }
+
+        view.findViewById<ImageView>(R.id.closeButton)?.setOnClickListener {
+            dismiss()
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createSendOrder() {
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+        val createDateTime = LocalDateTime.now().format(formatter)
+        val modifiedDateTime = LocalDateTime.now().format(formatter)
+
+        val ticket = Ticket(
+            ticketCode = 0,
+            companyCode = Config.getInstance().getCurrentCompany()?.companyCode,
+            userCode = 0,
+            createDateTime = createDateTime,
+            modifiedDateTime = modifiedDateTime,
+            total = 111.0,
+            taxTotal = 0.0,
+            generalTotal = 111.0,
+            paymentType = "CASH",
+            description = "CASH PAID",
+            status = 0,
+            resellerCode = Config.getInstance().getCurrentCompany()?.resellerCode,
+            accountCode = Config.getInstance().getCurrentUser()?.id,  // TODO
+            deviceCode = "DEV001"
+
+        )
+
+        val ticketApiManager = TicketApiManager()
+
+        try {
+            ticketApiManager.postTicket(ticket) { ticket1 ->
+
+                if (ticket1 != null) {
+                    confirmationListener?.onConfirmed(orderList, ticket1.ticketCode?.toLong())
+                }
+            }
+        }catch (e : Exception){
+            e.printStackTrace()
         }
     }
 
@@ -73,8 +132,8 @@ class ConfirmationPopup : DialogFragment() {
         orderList = orders
     }
 
-    fun setOnConfirmedListener(listener: (List<TicketOrder>) -> Unit) {
-        onConfirmed = listener
+    fun setConfirmationListener(listener: OnConfirmationListener) {
+        confirmationListener = listener
     }
 
     override fun onStart() {
