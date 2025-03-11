@@ -15,19 +15,17 @@ import androidx.fragment.app.DialogFragment
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
 import com.sumplier.app.data.api.managers.TicketApiManager
+import com.sumplier.app.data.listener.ConfirmationListener
 import com.sumplier.app.data.model.Ticket
 import com.sumplier.app.data.model.TicketOrder
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class ConfirmationPopup : DialogFragment() {
-    interface OnConfirmationListener {
-        fun onConfirmed(orders: List<TicketOrder>, ticketCode: Long?)
-    }
 
     private var currentPage = 0 // 0: Selection, 1: Progress, 2: Success, 3: Fail
-    private var confirmationListener: OnConfirmationListener? = null
-    private var orderList: List<TicketOrder> = emptyList()
+    private var confirmationListener: ConfirmationListener? = null
+    private var orderList: ArrayList<TicketOrder> = ArrayList();
     private var onSuccess: (() -> Unit)? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,32 +62,41 @@ class ConfirmationPopup : DialogFragment() {
         val createDateTime = LocalDateTime.now().format(formatter)
         val modifiedDateTime = LocalDateTime.now().format(formatter)
 
+        // Calculate prices...
+        var totalPrice : Double = 0.0
+        var generalTotal : Double = 0.0
+
+        for (order:TicketOrder in orderList){
+
+            totalPrice += order.totalPrice
+            generalTotal += order.totalPrice //TODO
+
+        }
+
         val ticket = Ticket(
             ticketCode = 0,
             companyCode = Config.getInstance().getCurrentCompany()?.companyCode,
             userCode = 0,
             createDateTime = createDateTime,
             modifiedDateTime = modifiedDateTime,
-            total = 111.0,
-            taxTotal = 0.0,
-            generalTotal = 111.0,
+            total = totalPrice,
+            taxTotal = 11.1,
+            generalTotal = generalTotal,
             paymentType = "CASH",
             description = "CASH PAID",
             status = 0,
             resellerCode = Config.getInstance().getCurrentCompany()?.resellerCode,
             accountCode = Config.getInstance().getCurrentUser()?.id,  // TODO
-            deviceCode = "DEV001"
+            deviceCode = "DEV001",
+            ticketOrders = orderList
 
         )
 
         val ticketApiManager = TicketApiManager()
 
         try {
-            ticketApiManager.postTicket(ticket) { ticket1 ->
-
-                if (ticket1 != null) {
-                    confirmationListener?.onConfirmed(orderList, ticket1.ticketCode?.toLong())
-                }
+            ticketApiManager.postTicket(ticket) {
+                confirmationListener?.onConfirmed(orderList)
             }
         }catch (e : Exception){
             e.printStackTrace()
@@ -128,11 +135,11 @@ class ConfirmationPopup : DialogFragment() {
         }, 1500)
     }
 
-    fun setOrderList(orders: List<TicketOrder>) {
+    fun setOrderList(orders: ArrayList<TicketOrder>) {
         orderList = orders
     }
 
-    fun setConfirmationListener(listener: OnConfirmationListener) {
+    fun setConfirmationListener(listener: ConfirmationListener) {
         confirmationListener = listener
     }
 

@@ -13,19 +13,17 @@ import com.sumplier.app.data.model.Product
 class TicketApiManager {
     private val ticketApiService: TicketApiService = RetrofitClient.getClient().create(TicketApiService::class.java)
 
-    fun postTicket(ticket: Ticket, onResult: (Ticket?) -> Unit) {
-
+    fun postTicket1(ticket: Ticket, onResult: (Long?) -> Unit) {
 
         Log.d("TicketApiManager", "Sending Ticket: ${Gson().toJson(ticket)}")
 
-
-        val call = ticketApiService.postTicket(ticket)
-        call.enqueue(object : Callback<Ticket> {
-            override fun onResponse(call: Call<Ticket>, response: Response<Ticket>) {
+        val call = ticketApiService.postTicket1(ticket)
+        call.enqueue(object : Callback<Long> {
+            override fun onResponse(call: Call<Long>, response: Response<Long>) {
                 if (response.isSuccessful) {
-                    val ticket1 = response.body()
-                    if (ticket1 != null) {
-                        onResult(ticket1)
+                    val ticketCode = response.body()
+                    if (ticketCode != null) {
+                        onResult(ticketCode)
                     } else {
                         onResult(null)
                     }
@@ -35,9 +33,32 @@ class TicketApiManager {
                 }
             }
 
-            override fun onFailure(call: Call<Ticket>, t: Throwable) {
+            override fun onFailure(call: Call<Long>, t: Throwable) {
                 Log.e("TicketApiManager", "Failure: ${t.message}")
                 onResult(null)
+            }
+        })
+    }
+
+    fun postTicket(ticket: Ticket, onResult: (Boolean) -> Unit) {
+
+        Log.d("TicketApiManager", "Sending Ticket: ${Gson().toJson(ticket)}")
+
+        val call = ticketApiService.postTicket(ticket)
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Log.d("TicketApiManager", "Ticket posted successfully!")
+                    onResult(true)  // Başarılı
+                } else {
+                    Log.e("TicketApiManager", "Error: ${response.code()} - ${response.errorBody()?.string()}")
+                    onResult(false)
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("TicketApiManager", "Failure: ${t.message}")
+                onResult(false) // Başarısız
             }
         })
     }

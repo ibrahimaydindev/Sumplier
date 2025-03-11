@@ -16,6 +16,7 @@ data class Ticket(
     var deviceCode: String? = null,
     var statusName: String? = null,
     var accountCode: Long? ,
+    var ticketOrders: ArrayList<TicketOrder>
 )
 
 

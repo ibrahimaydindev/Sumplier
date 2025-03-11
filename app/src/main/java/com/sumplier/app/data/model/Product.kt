@@ -5,7 +5,7 @@ class Product(
     val categoryCode: Long,
     val productCode: Long?,
     val productName: String?,
-    val price: Double?,
+    val price: Double,
     val price2: Double?,
     val price3: Double?,
     val taxRate: Double?,

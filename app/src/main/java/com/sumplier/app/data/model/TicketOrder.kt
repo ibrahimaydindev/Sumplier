@@ -8,7 +8,7 @@ data class TicketOrder(
     val productName: String?,
     val quantity: Double?,
     val price: Double?,
-    val totalPrice: Double?,
+    val totalPrice: Double,
     val status: Int?,
     val isChange: Boolean?,
     val newQuantity: Double?,

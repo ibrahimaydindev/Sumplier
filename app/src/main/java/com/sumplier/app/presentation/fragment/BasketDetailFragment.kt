@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sumplier.app.R
 import com.sumplier.app.data.api.managers.TicketOrderApiManager
+import com.sumplier.app.data.listener.ConfirmationListener
 import com.sumplier.app.data.model.TicketOrder
 import com.sumplier.app.presentation.activity.MainActivity
 
@@ -68,38 +69,26 @@ class BasketDetailFragment : Fragment() {
         view.findViewById<ConstraintLayout>(R.id.confirm_button)?.setOnClickListener {
             val confirmationPopup = ConfirmationPopup().apply {
                 setOrderList(basketItems)
-                setConfirmationListener(object : ConfirmationPopup.OnConfirmationListener {
-                    override fun onConfirmed(orders: List<TicketOrder>, ticketCode: Long?) {
-                        try {
-                            for(item: TicketOrder in orders) {
-                                item.ticketCode = ticketCode
-                                val ticketOrderApiManager = TicketOrderApiManager()
-                                
-                                ticketOrderApiManager.postTicketOrder(item) { isSuccess ->
-                                    if (isSuccess) {
-                                        showSuccess {
-                                            basketItems.clear()
-                                            onBasketUpdated?.invoke(basketItems)
-                                            
-                                            val intent = Intent(requireContext(), MainActivity::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                            startActivity(intent)
-                                            requireActivity().finish()
-                                        }
-                                    } else {
-                                        showFail()
-                                    }
-                                }
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            showFail()
+                setConfirmationListener(object : ConfirmationListener {
+                    override fun onConfirmed(orders: List<TicketOrder>) {
+                        showSuccess {
+                            basketItems.clear()
+                            onBasketUpdated?.invoke(basketItems)
+
+                            openMainActivity()
                         }
                     }
                 })
             }
             confirmationPopup.show(parentFragmentManager, "ConfirmationPopup")
         }
+    }
+    private fun openMainActivity(){
+
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     fun setBasketItems(items: ArrayList<TicketOrder>) {

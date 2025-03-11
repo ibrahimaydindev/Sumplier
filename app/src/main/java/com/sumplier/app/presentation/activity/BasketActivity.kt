@@ -136,33 +136,6 @@ class BasketActivity : AppCompatActivity() {
         updatePriceAndQuantity()
     }
 
-    private fun postTicketOrders() {
-
-        for(item:TicketOrder in currentItems){
-            postTicketOrder(item)
-        }
-
-    }
-
-    private fun postTicketOrder(ticketOrder: TicketOrder){
-
-
-        ticketOrder.ticketCode = orderCode
-        val ticketOrderApiManager = TicketOrderApiManager()
-
-        try {
-            ticketOrderApiManager.postTicketOrder(ticketOrder) { isSuccess ->
-
-                if (isSuccess) {
-                    println("Ticket Order post başarılı oldu ")
-                }
-
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-    }
 
     private fun setupProductRecyclerView() {
         val recyclerViewProducts = findViewById<RecyclerView>(R.id.recyclerViewProducts)
@@ -170,8 +143,7 @@ class BasketActivity : AppCompatActivity() {
         //Listen product card clicks...
         productAdapter = ProductAdapter(getProductsForCategory(menuCategories[0])) { product ->
 
-            if (product.price != null)
-                totalPrice += product.price
+            totalPrice += product.price
 
             val clickedItem : Product = product
             val itemTicketOrder = TicketOrder(
@@ -181,7 +153,7 @@ class BasketActivity : AppCompatActivity() {
                 productName = clickedItem.productName,
                 quantity = 1.0,
                 price = clickedItem.price,
-                totalPrice = clickedItem.price?.times(1.0),
+                totalPrice = clickedItem.price.times(1.0),
                 status = 0,
                 isChange = false,
                 newQuantity = 0.0,
