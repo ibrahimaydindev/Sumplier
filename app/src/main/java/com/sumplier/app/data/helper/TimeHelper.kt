@@ -11,7 +11,7 @@ object TimeHelper {
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatDate(dateString: String?, inputFormat: TimeFormat?, outputFormat: TimeFormat?): String? {
         if (dateString.isNullOrBlank() || inputFormat == null || outputFormat == null) {
-            return null // Null veya boş değerler gelirse dönüş yapma
+            return null
         }
 
         return try {
@@ -27,7 +27,7 @@ object TimeHelper {
             parsedDate.format(outputFormatter)
         } catch (e: Exception) {
             e.printStackTrace()
-            null // Hata olursa null döndür
+            null
         }
     }
 }

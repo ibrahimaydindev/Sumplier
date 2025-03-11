@@ -54,11 +54,13 @@ class TicketAdapter : RecyclerView.Adapter<TicketAdapter.TicketViewHolder>() {
         private val tvDate: TextView = itemView.findViewById(R.id.tvTicketDate)
         private val tvStatus: TextView = itemView.findViewById(R.id.tvTicketStatus)
         private val tvAccount: TextView = itemView.findViewById(R.id.tvTicketAccount)
+        private val tvPrice:  TextView = itemView.findViewById(R.id.tvTicketPrice)
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(ticket: Ticket) {
             tvTitle.text = ticket.ticketCode.toString()
             tvStatus.text = ticket.status.toString()
+            tvPrice.text = ticket.generalTotal.toString() + "₺"
 
             //set time
             val formattedDate = TimeHelper.formatDate(
