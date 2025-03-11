@@ -36,11 +36,7 @@ class BasketActivity : AppCompatActivity() {
     private lateinit var totalQuantityTv: TextView
 
 
-    private var orderCode: Long? = 0
-
     private var totalPrice : Double = 0.0
-
-    private var currentOrder : TicketOrder? = null;
 
     private var currentItems: ArrayList<TicketOrder> = ArrayList()
 
@@ -118,6 +114,7 @@ class BasketActivity : AppCompatActivity() {
         
         val basketDetailFragment = BasketDetailFragment().apply {
             setBasketItems(currentItems)
+            setCurrentAccount(currentAccount)
             setOnBasketUpdatedListener { updatedItems ->
                 currentItems = updatedItems
                 updatePriceAndQuantity()

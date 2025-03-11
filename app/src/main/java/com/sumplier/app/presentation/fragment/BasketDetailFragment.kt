@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sumplier.app.R
 import com.sumplier.app.data.api.managers.TicketOrderApiManager
 import com.sumplier.app.data.listener.ConfirmationListener
+import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.TicketOrder
 import com.sumplier.app.presentation.activity.MainActivity
 
@@ -22,8 +23,7 @@ class BasketDetailFragment : Fragment() {
     private lateinit var basketDetailAdapter: BasketDetailAdapter
     private var basketItems: ArrayList<TicketOrder> = ArrayList()
     private var onBasketUpdated: ((ArrayList<TicketOrder>) -> Unit)? = null
-
-    private var orderCode: Long? = 0
+    private lateinit var currentAccount: CompanyAccount
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_basket_detail, container, false)
@@ -69,6 +69,7 @@ class BasketDetailFragment : Fragment() {
         view.findViewById<ConstraintLayout>(R.id.confirm_button)?.setOnClickListener {
             val confirmationPopup = ConfirmationPopup().apply {
                 setOrderList(basketItems)
+                setCurrentAccount(currentAccount)
                 setConfirmationListener(object : ConfirmationListener {
                     override fun onConfirmed(orders: List<TicketOrder>) {
                         showSuccess {
@@ -96,6 +97,10 @@ class BasketDetailFragment : Fragment() {
         if (::basketDetailAdapter.isInitialized) {
             basketDetailAdapter.updateItems(items)
         }
+    }
+
+    fun setCurrentAccount (account : CompanyAccount){
+        currentAccount = account
     }
 
     fun setOnBasketUpdatedListener(listener: (ArrayList<TicketOrder>) -> Unit) {

@@ -16,6 +16,7 @@ import com.sumplier.app.R
 import com.sumplier.app.app.Config
 import com.sumplier.app.data.api.managers.TicketApiManager
 import com.sumplier.app.data.listener.ConfirmationListener
+import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.Ticket
 import com.sumplier.app.data.model.TicketOrder
 import java.time.LocalDateTime
@@ -23,6 +24,7 @@ import java.time.format.DateTimeFormatter
 
 class ConfirmationPopup : DialogFragment() {
 
+    private lateinit var currentAccount: CompanyAccount
     private var currentPage = 0 // 0: Selection, 1: Progress, 2: Success, 3: Fail
     private var confirmationListener: ConfirmationListener? = null
     private var orderList: ArrayList<TicketOrder> = ArrayList();
@@ -86,7 +88,7 @@ class ConfirmationPopup : DialogFragment() {
             description = "CASH PAID",
             status = 0,
             resellerCode = Config.getInstance().getCurrentCompany()?.resellerCode,
-            accountCode = Config.getInstance().getCurrentUser()?.id,  // TODO
+            accountCode = currentAccount.id,
             deviceCode = "DEV001",
             ticketOrders = orderList
 
@@ -137,6 +139,10 @@ class ConfirmationPopup : DialogFragment() {
 
     fun setOrderList(orders: ArrayList<TicketOrder>) {
         orderList = orders
+    }
+
+    fun setCurrentAccount (account:CompanyAccount){
+        currentAccount = account
     }
 
     fun setConfirmationListener(listener: ConfirmationListener) {

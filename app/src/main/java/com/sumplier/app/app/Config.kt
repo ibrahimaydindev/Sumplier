@@ -146,9 +146,9 @@ class Config private constructor() {
     /**
      * Function: getAccountById()
      */
-    fun getAccountById(accountId:Long) :CompanyAccount?  {
+    fun getAccountById(accountId:Long?) :CompanyAccount?  {
 
-        return accountMap.get(accountId)
+        return accountId?.let { accountMap.get(it) }
 
     }
 
