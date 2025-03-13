@@ -14,32 +14,32 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvTicketTitle"
+            android:id="@+id/tvTicketAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Ticket Title"
+            android:text="Account"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvTicketAccount"
+            android:id="@+id/tvAccountPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="account"
+            android:text="phone"
             android:maxLines="2"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/nunito_semibold"/>
 
         <TextView
             android:id="@+id/tvTicketDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTicketTitle"
+            app:layout_constraintTop_toBottomOf="@id/tvTicketAccount"
             android:text="10.03.2025"
             android:layout_marginTop="4dp"
             android:textSize="14sp" />

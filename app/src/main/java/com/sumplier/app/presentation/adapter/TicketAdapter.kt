@@ -50,15 +50,15 @@ class TicketAdapter : RecyclerView.Adapter<TicketAdapter.TicketViewHolder>() {
     override fun getItemCount() = filteredTickets.size
 
     class TicketViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvTitle: TextView = itemView.findViewById(R.id.tvTicketTitle)
+        private val tvTicketAccount: TextView = itemView.findViewById(R.id.tvTicketAccount)
         private val tvDate: TextView = itemView.findViewById(R.id.tvTicketDate)
         private val tvStatus: TextView = itemView.findViewById(R.id.tvTicketStatus)
-        private val tvAccount: TextView = itemView.findViewById(R.id.tvTicketAccount)
+        private val tvAccountPhone: TextView = itemView.findViewById(R.id.tvAccountPhone)
         private val tvPrice:  TextView = itemView.findViewById(R.id.tvTicketPrice)
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(ticket: Ticket) {
-            tvTitle.text = ticket.ticketCode.toString()
+            tvTicketAccount.text = ticket.accountName
             tvStatus.text = ticket.status.toString()
             tvPrice.text = ticket.generalTotal.toString() + "₺"
 
@@ -71,10 +71,10 @@ class TicketAdapter : RecyclerView.Adapter<TicketAdapter.TicketViewHolder>() {
 
             tvDate.text = formattedDate
 
-            //set account name
+            //set account phone...
             val currentAccount : CompanyAccount? = Config.getInstance().getAccountById(ticket.accountCode)
             if (currentAccount != null) {
-                tvAccount.text = currentAccount.accountName
+                tvAccountPhone.text = currentAccount.phoneNumber
             }
 
         }

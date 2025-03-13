@@ -65,8 +65,8 @@ class ConfirmationPopup : DialogFragment() {
         val modifiedDateTime = LocalDateTime.now().format(formatter)
 
         // Calculate prices...
-        var totalPrice : Double = 0.0
-        var generalTotal : Double = 0.0
+        var totalPrice = 0.0
+        var generalTotal = 0.0
 
         for (order:TicketOrder in orderList){
 
@@ -89,7 +89,7 @@ class ConfirmationPopup : DialogFragment() {
             description = "CASH PAID",
             status = 0,
             resellerCode = Config.getInstance().getCurrentCompany().resellerCode,
-            accountCode = currentAccount.id,
+            accountCode = currentAccount.accountCode,
             deviceCode = "DEV001",
             ticketOrders = orderList,
             accountName = currentAccount.accountName,
