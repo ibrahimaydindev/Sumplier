@@ -5,7 +5,7 @@ data class Menu(
     val companyCode: Long,
     val resellerCode: Long,
     val menuCode: Long,
-    val menuName: String?,
+    val menuName: String,
     val isActive: Boolean
 
 )

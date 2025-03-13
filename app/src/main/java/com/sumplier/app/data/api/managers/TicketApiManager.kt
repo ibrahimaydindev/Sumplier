@@ -49,7 +49,7 @@ class TicketApiManager {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.d("TicketApiManager", "Ticket posted successfully!")
-                    onResult(true)  // Başarılı
+                    onResult(true)
                 } else {
                     Log.e("TicketApiManager", "Error: ${response.code()} - ${response.errorBody()?.string()}")
                     onResult(false)
@@ -58,7 +58,7 @@ class TicketApiManager {
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Log.e("TicketApiManager", "Failure: ${t.message}")
-                onResult(false) // Başarısız
+                onResult(false)
             }
         })
     }
@@ -87,5 +87,4 @@ class TicketApiManager {
             }
         })
     }
-
 }

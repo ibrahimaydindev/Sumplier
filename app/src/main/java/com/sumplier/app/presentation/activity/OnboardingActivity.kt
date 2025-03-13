@@ -25,7 +25,6 @@ import com.sumplier.app.data.database.PreferencesHelper
 import com.sumplier.app.data.enums.ConfigKey
 import com.sumplier.app.data.enums.ConfigState
 import com.sumplier.app.data.model.Company
-import com.sumplier.app.data.model.User
 import kotlinx.coroutines.launch
 
 internal enum class OnboardingPages {
@@ -35,7 +34,6 @@ internal enum class OnboardingPages {
     RESET_PASSWORD_EMAIL,
     RESET_PASSWORD_CODE,
     NEW_PASSWORD,
-
 }
 
 class OnboardingActivity : AppCompatActivity() {
@@ -62,7 +60,6 @@ class OnboardingActivity : AppCompatActivity() {
 
 
     }
-
 
     private fun setUpCompanyLoginScreen() {
 
@@ -157,7 +154,6 @@ class OnboardingActivity : AppCompatActivity() {
                     ConfigState.PRODUCTS -> fetchProducts()
                     ConfigState.ACCOUNT -> fetchAccounts()
                     ConfigState.COMPLETED -> navigateToMain()
-                    else -> Log.e("Onboarding", "Bilinmeyen state: $currentState")
                 }
             } catch (e: Exception) {
                 Log.e("Onboarding", "State işlenirken hata: ${e.message}")
@@ -167,9 +163,7 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun fetchMenus(){
 
-        val company : Company? = Config.getInstance().getCurrentCompany()
-
-        if (company != null){
+        val company : Company = Config.getInstance().getCurrentCompany()
 
             val menuApiManager = MenuApiManager()
 
@@ -177,9 +171,7 @@ class OnboardingActivity : AppCompatActivity() {
                 menuApiManager.getMenus(company.companyCode, company.resellerCode) { menus ->
 
                     if (menus != null) {
-
                         Log.i("Onboarding", "menus : $menus")
-
                         PreferencesHelper.saveData(ConfigKey.MENU, menus)
                         currentState = ConfigState.CATEGORIES
                         processCurrentState()
@@ -193,14 +185,11 @@ class OnboardingActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
 
-        }
     }
 
     private fun fetchAccounts(){
 
-        val company : Company? = Config.getInstance().getCurrentCompany()
-
-        if (company != null){
+        val company : Company = Config.getInstance().getCurrentCompany()
 
             val accountApiManager = AccountApiManager()
 
@@ -222,14 +211,11 @@ class OnboardingActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
     }
 
     private fun fetchCategories(){
 
-        val company : Company? = Config.getInstance().getCurrentCompany()
-
-        if (company != null){
+        val company : Company = Config.getInstance().getCurrentCompany()
 
             val categoryApiManager = CategoryApiManager()
 
@@ -251,14 +237,11 @@ class OnboardingActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
     }
 
     private fun fetchProducts(){
 
-        val company : Company? = Config.getInstance().getCurrentCompany()
-
-        if (company != null){
+        val company : Company = Config.getInstance().getCurrentCompany()
 
             val productApiManager = ProductApiManager();
 
@@ -280,7 +263,6 @@ class OnboardingActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
     }
 
 
@@ -293,6 +275,7 @@ class OnboardingActivity : AppCompatActivity() {
 
                 if (company != null) {
                     PreferencesHelper.saveData(ConfigKey.COMPANY, company)
+                    Config.getInstance().setCurrentCompany(company)
                     currentState = ConfigState.USER
                     processCurrentState()
                 } else {
@@ -320,6 +303,7 @@ class OnboardingActivity : AppCompatActivity() {
                     currentState = ConfigState.MENUS
                     setView(OnboardingPages.PROGRESS)
                     showToastMessage("Giriş başarılı")
+                    Config.getInstance().setCurrentUser(user);
                     processCurrentState()
                 } else {
                     showError("Email veya şifre hatalı")
@@ -340,6 +324,7 @@ class OnboardingActivity : AppCompatActivity() {
 
         if (company != null) {
             currentState = ConfigState.USER
+            Config.getInstance().setCurrentCompany(company)
             processCurrentState()
             return
         }
@@ -375,12 +360,10 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun navigateToMain() {
 
-
         Config.getInstance().checkSetMenus()
         Config.getInstance().checkSetCategories()
         Config.getInstance().checkSetProducts()
         Config.getInstance().checkSetAccounts()
-
 
         Log.d("Onboarding", "Tüm veriler başarıyla yüklendi")
         val intent = Intent(this, MainActivity::class.java)

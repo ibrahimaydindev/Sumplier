@@ -73,7 +73,7 @@ class HistoryActivity : AppCompatActivity() {
         val ticketApiManager = TicketApiManager()
         val currentCompany = Config.getInstance().getCurrentCompany()
 
-        currentCompany?.let { company ->
+        currentCompany.let { company ->
             ticketApiManager.getTicketAll(
                 companyCode = company.companyCode,
                 resellerCode = company.resellerCode

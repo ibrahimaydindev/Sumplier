@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity() {
             AccountSelectionListener {
             override fun onAccountSelected(account: CompanyAccount) {
                 // Seçilen hesabı işle
-                Toast.makeText(this@MainActivity, "Selected: ${account.accountName}", Toast.LENGTH_SHORT).show()
                 startActivityWithAccountId(account.id)
             }
 

@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
-import com.sumplier.app.data.api.managers.TicketOrderApiManager
 import com.sumplier.app.data.model.Category
 import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.Product
@@ -129,7 +127,7 @@ class BasketActivity : AppCompatActivity() {
     }
 
     private fun calculateTotalPrice() {
-        totalPrice = currentItems.sumOf { it.totalPrice ?: 0.0 }
+        totalPrice = currentItems.sumOf { it.totalPrice }
         updatePriceAndQuantity()
     }
 
@@ -145,7 +143,7 @@ class BasketActivity : AppCompatActivity() {
             val clickedItem : Product = product
             val itemTicketOrder = TicketOrder(
                 id = 0,
-                ticketCode = null,
+                ticketCode = 0,
                 productCode = clickedItem.productCode,
                 productName = clickedItem.productName,
                 quantity = 1.0,
@@ -156,7 +154,7 @@ class BasketActivity : AppCompatActivity() {
                 newQuantity = 0.0,
                 newPrice = 0.0,
                 newTotalPrice = 0.0,
-                companyCode = Config.getInstance().getCurrentCompany()?.companyCode,
+                companyCode = Config.getInstance().getCurrentCompany().companyCode,
                 deviceCode = "TEST01"
 
             )

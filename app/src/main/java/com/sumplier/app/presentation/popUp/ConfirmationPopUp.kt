@@ -76,8 +76,9 @@ class ConfirmationPopup : DialogFragment() {
         }
 
         val ticket = Ticket(
+            id = 0,
             ticketCode = 0,
-            companyCode = Config.getInstance().getCurrentCompany()?.companyCode,
+            companyCode = Config.getInstance().getCurrentCompany().companyCode,
             userCode = 0,
             createDateTime = createDateTime,
             modifiedDateTime = modifiedDateTime,
@@ -87,10 +88,12 @@ class ConfirmationPopup : DialogFragment() {
             paymentType = "CASH",
             description = "CASH PAID",
             status = 0,
-            resellerCode = Config.getInstance().getCurrentCompany()?.resellerCode,
+            resellerCode = Config.getInstance().getCurrentCompany().resellerCode,
             accountCode = currentAccount.id,
             deviceCode = "DEV001",
-            ticketOrders = orderList
+            ticketOrders = orderList,
+            accountName = currentAccount.accountName,
+            paymentStatus = 0
 
         )
 

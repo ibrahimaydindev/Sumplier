@@ -12,8 +12,8 @@ import com.sumplier.app.data.model.User
 
 class Config private constructor() {
 
-    var user: User? = null
-    var company: Company? = null
+    lateinit var user: User
+    lateinit var company: Company
     val productMap: LongSparseArray<Product> = LongSparseArray()
     val menuMap: LongSparseArray<Menu> = LongSparseArray()
     val categoryMap: LongSparseArray<Category> = LongSparseArray()
@@ -30,21 +30,19 @@ class Config private constructor() {
         }
     }
 
-
-    fun getCurrentUser(): User? {
-
-        if (user != null)
-            return user
-
-        return PreferencesHelper.getData(ConfigKey.USER, User::class.java)
+    fun setCurrentUser(user: User) {
+        this.user = user
     }
 
-    fun getCurrentCompany(): Company? {
+    fun setCurrentCompany(company: Company) {
+        this.company = company
+    }
+    fun getCurrentUser(): User {
+        return user
+    }
 
-        if (company != null)
-            return company
-
-        return PreferencesHelper.getData(ConfigKey.COMPANY, Company::class.java)
+    fun getCurrentCompany(): Company {
+        return company
     }
 
     fun getCompanyAccounts(): List<CompanyAccount>? {
@@ -55,8 +53,6 @@ class Config private constructor() {
     fun clearAll() {
         PreferencesHelper.clearAllData()
     }
-
-    fun isLoggedIn(): Boolean = getCurrentUser() != null
 
     /**
      * Function: checkSetProducts()
@@ -70,8 +66,6 @@ class Config private constructor() {
 
         // Check and load products to RAM database!...
         for (product in products) {
-            if (product == null)
-                continue
 
             // Set product to map!...
             productMap.put(product.id, product)

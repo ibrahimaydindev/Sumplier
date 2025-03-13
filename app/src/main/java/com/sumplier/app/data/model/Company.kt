@@ -5,7 +5,7 @@ data class Company(
     val id: Long,
     val companyCode: Long,
     val companyName: String,
-    val isActive: Boolean?,
+    val isActive: Boolean,
     val resellerCode: Long,
     val email: String,
     val password: String,
