@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
@@ -30,6 +31,8 @@ class ConfirmationPopup : DialogFragment() {
     private var orderList: ArrayList<TicketOrder> = ArrayList();
     private var onSuccess: (() -> Unit)? = null
 
+    private lateinit var tvTicketCode: TextView
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.popup_confirmation, container, false)
     }
@@ -39,6 +42,8 @@ class ConfirmationPopup : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         showPage(currentPage)
+
+        tvTicketCode = view.findViewById(R.id.ticketCode)
 
         view.findViewById<ConstraintLayout>(R.id.btnYes)?.setOnClickListener {
             showProgress()
@@ -102,6 +107,9 @@ class ConfirmationPopup : DialogFragment() {
         try {
             ticketApiManager.postTicket(ticket) {
                 confirmationListener?.onConfirmed(orderList)
+
+                tvTicketCode.text = it.toString()
+
             }
         }catch (e : Exception){
             e.printStackTrace()

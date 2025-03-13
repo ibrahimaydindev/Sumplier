@@ -40,25 +40,25 @@ class TicketApiManager {
         })
     }
 
-    fun postTicket(ticket: Ticket, onResult: (Boolean) -> Unit) {
-
+    fun postTicket(ticket: Ticket, onResult: (Long) -> Unit) {
         Log.d("TicketApiManager", "Sending Ticket: ${Gson().toJson(ticket)}")
 
         val call = ticketApiService.postTicket(ticket)
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+        call.enqueue(object : Callback<Long> {
+            override fun onResponse(call: Call<Long>, response: Response<Long>) {
                 if (response.isSuccessful) {
-                    Log.d("TicketApiManager", "Ticket posted successfully!")
-                    onResult(true)
+                    val ticketId = response.body() ?: -1L
+                    Log.d("TicketApiManager", "Ticket posted successfully! ID: $ticketId")
+                    onResult(ticketId)
                 } else {
                     Log.e("TicketApiManager", "Error: ${response.code()} - ${response.errorBody()?.string()}")
-                    onResult(false)
+                    onResult(-1L)
                 }
             }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
+            override fun onFailure(call: Call<Long>, t: Throwable) {
                 Log.e("TicketApiManager", "Failure: ${t.message}")
-                onResult(false)
+                onResult(-1L)
             }
         })
     }

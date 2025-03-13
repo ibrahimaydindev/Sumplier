@@ -46,5 +46,5 @@ interface TicketApiService {
 
     @POST("Ticket/PostTicket")
     @Headers("Content-Type: application/json")
-    fun postTicket(@Body ticket: Ticket): Call<Void>
+    fun postTicket(@Body ticket: Ticket): Call<Long>
 }
