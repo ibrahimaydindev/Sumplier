@@ -13,7 +13,9 @@ interface TicketApiService {
     @GET("Ticket/GetTicketAll")
     fun getTicketAll(
         @Query("CompanyCode") companyCode: Long,
-        @Query("ResellerCode") resellerCode: Long
+        @Query("ResellerCode") resellerCode: Long,
+        @Query("StartDateTime") startDateTime: String,
+        @Query("EndDateTime") endDateTime: String
     ): Call<List<Ticket>>
 
     @GET("Ticket/GetTicketTicketCode")
@@ -35,14 +37,8 @@ interface TicketApiService {
         @Query("ResellerCode") resellerCode: Long,
         @Query("StartDateTime") startDateTime: String,
         @Query("EndDateTime") endDateTime: String,
-        @Query("UserCode") userCode: Int
+        @Query("UserCode") userCode: Long
     ): Call<List<Ticket>>
-
-    @POST("Ticket/PostTicket")
-    @Headers("Content-Type: application/json")
-    fun postTicket1(
-        @Body ticket: Ticket
-    ): Call<Long>
 
     @POST("Ticket/PostTicket")
     @Headers("Content-Type: application/json")

@@ -227,7 +227,7 @@
         android:id="@+id/tvPowered"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="POWERED BY \n NEPTUNE ARC  TECHNOLOGIES"
+        android:text="POWERED BY \n NEPTUNE ARCH  TECHNOLOGIES"
         android:lines="2"
         android:gravity="center"
         android:textColor="@color/gray"

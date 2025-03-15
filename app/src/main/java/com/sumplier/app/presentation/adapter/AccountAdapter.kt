@@ -26,7 +26,7 @@ class AccountAdapter(
 
         fun bind(account: CompanyAccount) {
             nameTextView.text = account.accountName
-            //holder.phoneTextView.text = account.companyCode.toString()
+            phoneTextView.text = account.phoneNumber
 
             editImageView.setOnClickListener { onEditClick(account) }
             cashImageView.setOnClickListener { onCashClick(account) }

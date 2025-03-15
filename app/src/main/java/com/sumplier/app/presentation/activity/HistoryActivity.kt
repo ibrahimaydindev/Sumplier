@@ -18,8 +18,13 @@ import com.sumplier.app.data.api.managers.UserApiManager
 import com.sumplier.app.data.database.PreferencesHelper
 import com.sumplier.app.data.enums.ConfigKey
 import com.sumplier.app.data.enums.ConfigState
+import com.sumplier.app.data.enums.DateFormat
 import com.sumplier.app.data.model.Ticket
 import com.sumplier.app.presentation.adapter.TicketAdapter
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class HistoryActivity : AppCompatActivity() {
     private lateinit var ticketAdapter: TicketAdapter
@@ -73,14 +78,34 @@ class HistoryActivity : AppCompatActivity() {
         val ticketApiManager = TicketApiManager()
         val currentCompany = Config.getInstance().getCurrentCompany()
 
-        currentCompany.let { company ->
-            ticketApiManager.getTicketAll(
-                companyCode = company.companyCode,
-                resellerCode = company.resellerCode
-            ) { tickets ->
-                tickets?.takeUnless { it.isEmpty() }?.let { validTickets ->
-                    ticketAdapter.setTickets(validTickets)
-                }
+        // Tarih formatı
+        val dateFormat =
+            SimpleDateFormat(DateFormat.CLOUD_REQUEST_FORMAT.pattern, Locale.getDefault()).apply {
+                timeZone = TimeZone.getTimeZone("UTC")
+            }
+
+        // Start: Yesterday 00.00
+        val calendar = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_YEAR, -1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 1)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val startDateTime = dateFormat.format(calendar.time)
+
+        // End: Today current Time
+        val endDateTime = dateFormat.format(Calendar.getInstance().time)
+
+        ticketApiManager.getTicketByUserCode(
+            companyCode = currentCompany.companyCode,
+            resellerCode = currentCompany.resellerCode,
+            startDateTime = startDateTime,
+            endDateTime = endDateTime,
+            userCode = Config.getInstance().getCurrentUser().userCode
+        ) { tickets ->
+            tickets?.takeUnless { it.isEmpty() }?.let { validTickets ->
+                ticketAdapter.setTickets(validTickets)
             }
         }
     }

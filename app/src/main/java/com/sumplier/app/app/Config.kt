@@ -145,6 +145,17 @@ class Config private constructor() {
         return accountId?.let { accountMap.get(it) }
 
     }
+    fun getAccountByCode(code: Long): CompanyAccount? {
+
+        for (i in 0 until accountMap.size()) {
+            val account = accountMap.valueAt(i)
+            if (account.accountCode == code) {
+                return account
+            }
+        }
+        // Eşleşen bir değer bulunmazsa null döndürülür
+        return null
+    }
 
 
 

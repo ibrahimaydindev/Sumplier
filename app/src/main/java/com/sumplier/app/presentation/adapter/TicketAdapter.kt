@@ -9,7 +9,8 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
-import com.sumplier.app.data.enums.TimeFormat
+import com.sumplier.app.data.enums.DateFormat
+import com.sumplier.app.data.enums.TicketStatus
 import com.sumplier.app.data.helper.TimeHelper
 import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.Ticket
@@ -56,23 +57,24 @@ class TicketAdapter : RecyclerView.Adapter<TicketAdapter.TicketViewHolder>() {
         private val tvAccountPhone: TextView = itemView.findViewById(R.id.tvAccountPhone)
         private val tvPrice:  TextView = itemView.findViewById(R.id.tvTicketPrice)
 
+
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(ticket: Ticket) {
             tvTicketAccount.text = ticket.accountName
-            tvStatus.text = ticket.status.toString()
+            tvStatus.text = TicketStatus.getStatusText(ticket.status)
             tvPrice.text = ticket.generalTotal.toString() + "₺"
 
             //set time
-            val formattedDate = TimeHelper.formatDate(
+            val formattedDate = TimeHelper.convertFormat(
                 ticket.createDateTime,
-                TimeFormat.ISO_WITHOUT_Z,
-                TimeFormat.DISPLAY_FORMAT
+                DateFormat.CLOUD_FORMAT,
+                DateFormat.DDMMYYYY_HHMM
             ) ?: "Tarih Yok" // if null
 
             tvDate.text = formattedDate
 
             //set account phone...
-            val currentAccount : CompanyAccount? = Config.getInstance().getAccountById(ticket.accountCode)
+            val currentAccount : CompanyAccount? = Config.getInstance().getAccountByCode(ticket.accountCode)
             if (currentAccount != null) {
                 tvAccountPhone.text = currentAccount.phoneNumber
             }

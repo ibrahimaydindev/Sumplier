@@ -142,8 +142,8 @@ class BasketActivity : AppCompatActivity() {
 
             val clickedItem : Product = product
             val itemTicketOrder = TicketOrder(
-                id = 0,
-                ticketCode = 0,
+                id = 0, // default
+                ticketId = 0, // default
                 productCode = clickedItem.productCode,
                 productName = clickedItem.productName,
                 quantity = 1.0,

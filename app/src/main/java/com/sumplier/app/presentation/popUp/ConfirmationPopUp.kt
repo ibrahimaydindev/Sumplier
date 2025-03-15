@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
 import com.sumplier.app.data.api.managers.TicketApiManager
+import com.sumplier.app.data.enums.DateFormat
 import com.sumplier.app.data.listener.ConfirmationListener
 import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.Ticket
@@ -64,7 +65,7 @@ class ConfirmationPopup : DialogFragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createSendOrder() {
 
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        val formatter = DateTimeFormatter.ofPattern(DateFormat.CLOUD_FORMAT.pattern)
 
         val createDateTime = LocalDateTime.now().format(formatter)
         val modifiedDateTime = LocalDateTime.now().format(formatter)
@@ -84,7 +85,7 @@ class ConfirmationPopup : DialogFragment() {
             id = 0,
             ticketCode = 0,
             companyCode = Config.getInstance().getCurrentCompany().companyCode,
-            userCode = 0,
+            userCode = Config.getInstance().getCurrentUser().userCode,
             createDateTime = createDateTime,
             modifiedDateTime = modifiedDateTime,
             total = totalPrice,
