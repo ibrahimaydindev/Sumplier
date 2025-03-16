@@ -14,6 +14,9 @@ class UserApiManager {
     fun loginUser(email: String, password: String, onResult: (User?) -> Unit) {
 
         val call = userApiService.getUserLogin(email, password)
+
+        Log.d("UserApiManager", "Request URL: ${call.request().url()}")
+
         call.enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {

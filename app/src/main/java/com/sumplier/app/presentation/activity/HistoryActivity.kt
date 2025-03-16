@@ -81,7 +81,7 @@ class HistoryActivity : AppCompatActivity() {
         // Tarih formatı
         val dateFormat =
             SimpleDateFormat(DateFormat.CLOUD_REQUEST_FORMAT.pattern, Locale.getDefault()).apply {
-                timeZone = TimeZone.getTimeZone("UTC")
+                timeZone = TimeZone.getTimeZone("Europe/Istanbul")
             }
 
         // Start: Yesterday 00.00

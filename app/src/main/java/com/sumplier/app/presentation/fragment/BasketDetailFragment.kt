@@ -12,11 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sumplier.app.R
-import com.sumplier.app.data.api.managers.TicketOrderApiManager
 import com.sumplier.app.data.listener.ConfirmationListener
 import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.TicketOrder
 import com.sumplier.app.presentation.activity.MainActivity
+import com.sumplier.app.presentation.popUp.OrderEditPopup
 
 class BasketDetailFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
@@ -108,22 +108,39 @@ class BasketDetailFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        basketDetailAdapter = BasketDetailAdapter(basketItems) { position ->
+        basketDetailAdapter = BasketDetailAdapter(
+            basketItems,
+            { position ->
+                basketItems.removeAt(position)
+                basketDetailAdapter.notifyItemRemoved(position)
 
-            basketItems.removeAt(position)
-            basketDetailAdapter.notifyItemRemoved(position)
-
-            if (basketItems.isEmpty()) {
-                onBasketUpdated?.invoke(basketItems)
-                requireActivity().findViewById<FrameLayout>(R.id.fragmentContainer).visibility = View.GONE
-                parentFragmentManager.popBackStack()
+                if (basketItems.isEmpty()) {
+                    onBasketUpdated?.invoke(basketItems)
+                    requireActivity().findViewById<FrameLayout>(R.id.fragmentContainer).visibility = View.GONE
+                    parentFragmentManager.popBackStack()
+                }
+            },
+            { order ->
+                showOrderEditPopup(order)
             }
-
-        }
+        )
         
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = basketDetailAdapter
         }
+    }
+
+    private fun showOrderEditPopup(order: TicketOrder) {
+        OrderEditPopup().apply {
+            setOrder(order)
+            setOnOrderUpdatedListener { updatedOrder ->
+                val index = basketItems.indexOfFirst { it.id == updatedOrder.id }
+                if (index != -1) {
+                    basketItems[index] = updatedOrder
+                    basketDetailAdapter.updateItems(basketItems)
+                }
+            }
+        }.show(parentFragmentManager, "OrderEditPopup")
     }
 }

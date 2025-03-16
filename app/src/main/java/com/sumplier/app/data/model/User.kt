@@ -2,6 +2,7 @@ package com.sumplier.app.data.model
 
 data class User(
     val id: Long,
+    val userCode: Long,
     val name: String,
     val surname: String?,
     val email: String,
@@ -13,6 +14,5 @@ data class User(
     val resellerCode: Long,
     val image: String?,
     val deleted: Boolean,
-    val userCode: Long,
 
 )

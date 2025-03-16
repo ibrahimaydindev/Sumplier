@@ -73,11 +73,13 @@ class ConfirmationPopup : DialogFragment() {
         // Calculate prices...
         var totalPrice = 0.0
         var generalTotal = 0.0
+        var taxTotal = 0.0
 
         for (order:TicketOrder in orderList){
 
             totalPrice += order.totalPrice
             generalTotal += order.totalPrice //TODO
+            taxTotal = (order.totalPrice / 100) * 10
 
         }
 
@@ -89,7 +91,7 @@ class ConfirmationPopup : DialogFragment() {
             createDateTime = createDateTime,
             modifiedDateTime = modifiedDateTime,
             total = totalPrice,
-            taxTotal = 11.1,
+            taxTotal = taxTotal,
             generalTotal = generalTotal,
             paymentType = "CASH",
             description = "CASH PAID",

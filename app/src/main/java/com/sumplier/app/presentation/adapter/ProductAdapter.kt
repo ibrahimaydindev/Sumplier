@@ -3,13 +3,15 @@ package com.sumplier.app.presentation.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.sumplier.app.data.model.Product
 import com.sumplier.app.databinding.ProductItemBinding
+import com.sumplier.app.presentation.popUp.QuantityPopup
 
 class ProductAdapter(
     private var productList: List<Product>,
-    private val onAddToCartClick: (Product) -> Unit
+    private val onAddToCartClick: (Product, Double) -> Unit
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -30,7 +32,25 @@ class ProductAdapter(
             binding.textViewProductPrice.text = "₺ ${product.price}"
             //Glide.with(binding.imageViewProduct.context).load(product.imageUrl).into(binding.imageViewProduct)
 
-            binding.productCard.setOnClickListener { onAddToCartClick(product) }
+            // Normal tıklama - varsayılan miktar 1.0
+            binding.productCard.setOnClickListener { 
+                onAddToCartClick(product, 1.0)
+            }
+
+            // Uzun tıklama - miktar popup'ı
+            binding.productCard.setOnLongClickListener { 
+                showQuantityPopup(product)
+                true
+            }
+        }
+
+        private fun showQuantityPopup(product: Product) {
+            val quantityPopup = QuantityPopup().apply {
+                setOnQuantitySelectedListener { quantity ->
+                    onAddToCartClick(product, quantity)
+                }
+            }
+            quantityPopup.show((binding.root.context as AppCompatActivity).supportFragmentManager, "QuantityPopup")
         }
     }
 

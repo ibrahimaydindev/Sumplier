@@ -20,11 +20,10 @@ enum class TicketStatus(val statusCode: Int) {
     }
 
     companion object {
-        fun getStatus(code: Int): TicketStatus? {
-            return values().find { it.statusCode == code }
+        private fun getStatus(code: Int): TicketStatus? {
+            return entries.find { it.statusCode == code }
         }
 
-        // Status enum'ına karşılık gelen metni döndüren fonksiyon
         fun getStatusText(code: Int): String {
             val status = getStatus(code)
             return status?.getText() ?: "Unknown Status"

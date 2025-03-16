@@ -153,7 +153,7 @@ class Config private constructor() {
                 return account
             }
         }
-        // Eşleşen bir değer bulunmazsa null döndürülür
+
         return null
     }
 

@@ -135,33 +135,38 @@ class BasketActivity : AppCompatActivity() {
     private fun setupProductRecyclerView() {
         val recyclerViewProducts = findViewById<RecyclerView>(R.id.recyclerViewProducts)
 
-        //Listen product card clicks...
-        productAdapter = ProductAdapter(getProductsForCategory(menuCategories[0])) { product ->
+        productAdapter = ProductAdapter(getProductsForCategory(menuCategories[0])) { product, quantity ->
+            // Check product if already exist
+            val existingItem = currentItems.find { it.productCode == product.productCode }
 
-            totalPrice += product.price
+            if (existingItem != null) {
+                // Update if exist
+                existingItem.apply {
+                    this.quantity += quantity
+                    this.totalPrice = this.price * this.quantity
+                }
+            } else {
+                // Add new item if not exist
+                val itemTicketOrder = TicketOrder(
+                    id = 0,
+                    ticketId = 0,
+                    productCode = product.productCode,
+                    productName = product.productName,
+                    quantity = quantity,
+                    price = product.price,
+                    totalPrice = product.price * quantity,
+                    status = 0,
+                    isChange = false,
+                    newQuantity = 0.0,
+                    newPrice = 0.0,
+                    newTotalPrice = 0.0,
+                    companyCode = Config.getInstance().getCurrentCompany().companyCode,
+                    deviceCode = "TEST01"
+                )
+                currentItems.add(itemTicketOrder)
+            }
 
-            val clickedItem : Product = product
-            val itemTicketOrder = TicketOrder(
-                id = 0, // default
-                ticketId = 0, // default
-                productCode = clickedItem.productCode,
-                productName = clickedItem.productName,
-                quantity = 1.0,
-                price = clickedItem.price,
-                totalPrice = clickedItem.price.times(1.0),
-                status = 0,
-                isChange = false,
-                newQuantity = 0.0,
-                newPrice = 0.0,
-                newTotalPrice = 0.0,
-                companyCode = Config.getInstance().getCurrentCompany().companyCode,
-                deviceCode = "TEST01"
-
-            )
-
-            currentItems.add(itemTicketOrder)
-
-            updatePriceAndQuantity()
+            calculateTotalPrice()
         }
 
         recyclerViewProducts.layoutManager = GridLayoutManager(this, 2)
