@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
 import com.sumplier.app.data.api.managers.TicketApiManager
@@ -30,6 +31,7 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var ticketAdapter: TicketAdapter
     private lateinit var searchEditText: EditText
     private lateinit var recyclerView: RecyclerView
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +42,8 @@ class HistoryActivity : AppCompatActivity() {
         setupViews()
         setupRecyclerView()
         setupSearch()
-        
-        // Test için örnek veriler
+        setupSwipeRefresh()
+
         loadData()
     }
 
@@ -54,6 +56,7 @@ class HistoryActivity : AppCompatActivity() {
     private fun setupViews() {
         searchEditText = findViewById(R.id.etSearch)
         recyclerView = findViewById(R.id.rvTickets)
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh)
     }
 
     private fun setupRecyclerView() {
@@ -72,6 +75,12 @@ class HistoryActivity : AppCompatActivity() {
                 ticketAdapter.filterTickets(s.toString())
             }
         })
+    }
+
+    private fun setupSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener {
+            loadData()
+        }
     }
 
     private fun loadData() {
@@ -104,6 +113,9 @@ class HistoryActivity : AppCompatActivity() {
             endDateTime = endDateTime,
             userCode = Config.getInstance().getCurrentUser().userCode
         ) { tickets ->
+            // SwipeRefresh'i durdur
+            swipeRefreshLayout.isRefreshing = false
+            
             tickets?.takeUnless { it.isEmpty() }?.let { validTickets ->
                 ticketAdapter.setTickets(validTickets)
             }

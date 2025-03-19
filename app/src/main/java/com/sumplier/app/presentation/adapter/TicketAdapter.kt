@@ -1,11 +1,13 @@
 package com.sumplier.app.presentation.adapter
 
+import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
@@ -14,6 +16,7 @@ import com.sumplier.app.data.enums.TicketStatus
 import com.sumplier.app.data.helper.TimeHelper
 import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.Ticket
+import com.sumplier.app.presentation.popUp.TicketDetailPopup
 
 class TicketAdapter : RecyclerView.Adapter<TicketAdapter.TicketViewHolder>() {
 
@@ -50,13 +53,22 @@ class TicketAdapter : RecyclerView.Adapter<TicketAdapter.TicketViewHolder>() {
 
     override fun getItemCount() = filteredTickets.size
 
-    class TicketViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TicketViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvTicketAccount: TextView = itemView.findViewById(R.id.tvTicketAccount)
         private val tvDate: TextView = itemView.findViewById(R.id.tvTicketDate)
         private val tvStatus: TextView = itemView.findViewById(R.id.tvTicketStatus)
         private val tvAccountPhone: TextView = itemView.findViewById(R.id.tvAccountPhone)
         private val tvPrice:  TextView = itemView.findViewById(R.id.tvTicketPrice)
 
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val ticket = filteredTickets[position]
+                    showTicketDetailPopup(ticket, itemView.context)
+                }
+            }
+        }
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(ticket: Ticket) {
@@ -78,7 +90,12 @@ class TicketAdapter : RecyclerView.Adapter<TicketAdapter.TicketViewHolder>() {
             if (currentAccount != null) {
                 tvAccountPhone.text = currentAccount.phoneNumber
             }
-
         }
+    }
+
+    private fun showTicketDetailPopup(ticket: Ticket, context: Context) {
+        val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+        TicketDetailPopup.newInstance(ticket)
+            .show(fragmentManager, "TicketDetailPopup")
     }
 }
