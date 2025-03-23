@@ -15,11 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sumplier"
         tools:targetApi="31">
-
         <activity
-
-            android:name=".presentation.activity.OnboardingActivity" />
-
+            android:name=".presentation.activity.HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.activity.AccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.activity.BasketActivity"
+            android:exported="false" />
+        <activity android:name=".presentation.activity.OnboardingActivity" />
         <activity
             android:name=".presentation.activity.AnimationActivity"
             android:exported="true">
@@ -29,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.activity.MainActivity"
             android:exported="true">
@@ -38,12 +42,9 @@
             </intent-filter>
         </activity>
 
-
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>

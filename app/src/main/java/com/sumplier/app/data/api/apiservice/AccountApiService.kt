@@ -11,8 +11,8 @@ import retrofit2.http.Query
 interface AccountApiService {
     @GET("CompanyAccount/GetCompanyAccountAll")
     fun getAccountsAll(
-        @Query("CompanyCode") companyCode: String?,
-        @Query("ResellerCode") resellerCode: String?,
+        @Query("CompanyCode") companyCode: Long,
+        @Query("ResellerCode") resellerCode: Long,
     ): Call<List<CompanyAccount>>
 
 }

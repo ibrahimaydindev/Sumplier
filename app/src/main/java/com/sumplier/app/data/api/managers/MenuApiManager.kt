@@ -10,7 +10,7 @@ import retrofit2.Response
 
 class MenuApiManager {
     private val menuApiService: MenuApiService = RetrofitClient.getClient().create(MenuApiService::class.java)
-    fun getMenus(companyCode: String?, resellerCode: String?, onResult: (List<Menu>?) -> Unit) {
+    fun getMenus(companyCode: Long, resellerCode: Long, onResult: (List<Menu>?) -> Unit) {
 
         val call = menuApiService.getMenus(companyCode, resellerCode)
         call.enqueue(object : Callback<List<Menu>> {

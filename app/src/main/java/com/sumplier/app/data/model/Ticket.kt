@@ -1,19 +1,27 @@
 package com.sumplier.app.data.model
 
 data class Ticket(
-    var id: Int? = null,
-    var ticketCode: String? = null,
-    var companyCode: String? = null,
-    var userCode: String? = null,
-    var createDateTime: String? = null,
-    var modifiedDateTime: String? = null,
-    var total: Double? = null,
-    var taxTotal: Double? = null,
-    var generalTotal: Double? = null,
+    var id: Long,
+    var ticketCode: Long,
+    var companyCode: Long,
+    var resellerCode: Long,
+    var userCode: Long,
+    var createDateTime: String,
+    var modifiedDateTime: String,
+    var discountTotal:Double,
+    var total: Double,
+    var taxTotal: Double,
+    var generalTotal: Double,
     var paymentType: String? = null,
-    var description: String? = null,
-    var status: Int? = null,
-    var deviceCode: String? = null
+    var paymentStatus: Int,
+    var description: String?,
+    var status: Int,
+    var deviceCode: String,
+    var accountCode: Long,
+    var accountName: String?,
+    var ticketOrders: ArrayList<TicketOrder>
 )
+
+
 
 

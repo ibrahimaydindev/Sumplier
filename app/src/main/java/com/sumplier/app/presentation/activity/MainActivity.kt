@@ -1,17 +1,19 @@
 package com.sumplier.app.presentation.activity
 
-import com.sumplier.app.presentation.activity.popUp.AccountPopup
+
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sumplier.app.R
 import com.sumplier.app.app.Config
 import com.sumplier.app.data.model.Company
 import com.sumplier.app.data.model.CompanyAccount
 import com.sumplier.app.data.model.User
-import com.sumplier.app.presentation.activity.listener.AccountSelectionListener
+import com.sumplier.app.presentation.popUp.AccountSelectionPopUp
+import com.sumplier.app.presentation.listener.AccountSelectionListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,14 +34,31 @@ class MainActivity : AppCompatActivity() {
     private fun setView(){
 
         findViewById<TextView>(R.id.tvCompanyName).text = company?.companyName ?:"CompanyName"
+        findViewById<TextView>(R.id.tvUserName).text = user?.name ?:"UserName"
 
     }
 
     private fun setButtonActions(){
 
-        findViewById<Button>(R.id.btnCreateOrder)?.setOnClickListener {
+        findViewById<LinearLayout>(R.id.btnCreateOrder)?.setOnClickListener {
 
             showAccountPopup()
+        }
+
+        findViewById<LinearLayout>(R.id.buttonAccounts)?.setOnClickListener {
+            val intent = Intent(this, AccountActivity::class.java)
+            startActivity(intent)
+        }
+
+        findViewById<LinearLayout>(R.id.buttonPastOrders)?.setOnClickListener {
+
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
+        }
+
+        findViewById<LinearLayout>(R.id.buttonNotifications)?.setOnClickListener {
+
+            // notifications
         }
 
     }
@@ -51,17 +70,25 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val accountPopup = AccountPopup(accounts, object : AccountSelectionListener {
+        val accountPopup = AccountSelectionPopUp.newInstance(accounts, object :
+            AccountSelectionListener {
             override fun onAccountSelected(account: CompanyAccount) {
-                println("Seçilen hesap: ${account.accountName}")
+                // Seçilen hesabı işle
+                startActivityWithAccountId(account.id)
             }
 
             override fun onPopupDismissed() {
-                // Popup kapandığında yapılacak işlemler
-                println("Popup kapatıldı.")
+                // Popup kapatıldığında yapılacak işlemler
             }
         })
 
         accountPopup.show(supportFragmentManager, "AccountPopup")
+
+    }
+
+    fun startActivityWithAccountId(accountId: Long) {
+        val intent = Intent(this, BasketActivity::class.java)
+        intent.putExtra("account_id", accountId)  // accountId'yi Intent'e ekleyin
+        startActivity(intent)
     }
 }

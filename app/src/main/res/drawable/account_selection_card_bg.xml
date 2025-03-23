@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Basılı iken gösterilecek arka plan -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#1E5CD9"/> <!-- Biraz koyu mavi -->
+            <corners android:radius="16dp"/>
+            <stroke android:color="@color/gray" android:width="1dp"/>
+        </shape>
+    </item>
+
+    <!-- Normal durumda gösterilecek arka plan -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#246BFD"/> <!-- Orijinal mavi -->
+            <corners android:radius="16dp"/>
+            <stroke android:color="@color/gray" android:width="1dp"/>
+        </shape>
+    </item>
+</selector>
