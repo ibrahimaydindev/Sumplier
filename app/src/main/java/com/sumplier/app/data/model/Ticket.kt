@@ -8,6 +8,7 @@ data class Ticket(
     var userCode: Long,
     var createDateTime: String,
     var modifiedDateTime: String,
+    var discountTotal:Double,
     var total: Double,
     var taxTotal: Double,
     var generalTotal: Double,

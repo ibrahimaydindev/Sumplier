@@ -56,7 +56,34 @@
                     android:layout_marginTop="24dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/btnNo"
+                        android:id="@+id/btnDiscount"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:background="@drawable/account_selection_bg"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="İndirim Uygula"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/nunito_bold"
+                            android:textSize="15sp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp">
+
+                    </View>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/btnTakePayment"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:background="@drawable/past_orders_bg"
@@ -109,6 +136,7 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
+
             </LinearLayout>
 
             <!-- Progress Page -->
@@ -191,6 +219,57 @@
                     android:text="İşlem başarısız!"
                     android:textAlignment="center"
                     android:layout_marginTop="16dp"/>
+            </LinearLayout>
+
+            <!-- Discount Page -->
+            <LinearLayout
+                android:id="@+id/discountPage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="24dp"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/etDiscountPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="İndirim Tutarı Giriniz"
+                    android:inputType="numberDecimal"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvDiscountError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="İndirim tutarı toplam tutardan fazla olamaz"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    android:layout_marginBottom="16dp"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/btnApplyDiscount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/new_order_card_bg"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tamam"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textSize="15sp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="8dp"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </FrameLayout>
     </androidx.cardview.widget.CardView>

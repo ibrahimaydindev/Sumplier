@@ -9,6 +9,7 @@ data class TicketOrder(
     var quantity: Double,
     var price: Double,
     var totalPrice: Double,
+    var discountPrice: Double,
     val status: Int,
     val isChange: Boolean,
     val newQuantity: Double,

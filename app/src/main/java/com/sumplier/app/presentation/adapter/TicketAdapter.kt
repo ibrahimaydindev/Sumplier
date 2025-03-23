@@ -34,7 +34,9 @@ class TicketAdapter : RecyclerView.Adapter<TicketAdapter.TicketViewHolder>() {
             tickets.toMutableList()
         } else {
             tickets.filter { ticket ->
-                ticket.ticketCode.toString().contains(query, ignoreCase = true)
+                val nameMatches = ticket.accountName.toString().contains(query, ignoreCase = true)
+                val priceMatches = ticket.generalTotal.toString().contains(query, ignoreCase = true)
+                nameMatches || priceMatches
             }.toMutableList()
         }
         notifyDataSetChanged()
@@ -91,6 +93,7 @@ class TicketAdapter : RecyclerView.Adapter<TicketAdapter.TicketViewHolder>() {
                 tvAccountPhone.text = currentAccount.phoneNumber
             }
         }
+
     }
 
     private fun showTicketDetailPopup(ticket: Ticket, context: Context) {

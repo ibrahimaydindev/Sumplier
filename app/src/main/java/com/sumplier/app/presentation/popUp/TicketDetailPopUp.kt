@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sumplier.app.R
 import com.sumplier.app.data.enums.DateFormat
+import com.sumplier.app.data.enums.TicketStatus
 import com.sumplier.app.data.helper.TimeHelper
 import com.sumplier.app.data.model.Ticket
 import com.sumplier.app.presentation.adapter.TicketOrderAdapter
@@ -33,17 +34,18 @@ class TicketDetailPopup : DialogFragment() {
 
         ticket?.let { ticket ->
             view.apply {
-                findViewById<TextView>(R.id.tvTicketId).text = ticket.id.toString()
+                findViewById<TextView>(R.id.tv_ticket_account).text = ticket.accountName.toString()
                 findViewById<TextView>(R.id.tvDateTime).text = TimeHelper.convertFormat(ticket.createDateTime, DateFormat.CLOUD_FORMAT, DateFormat.DDMMYYYY_HHMM)
+                findViewById<TextView>(R.id.tvStatus).text = TicketStatus.getStatusText(ticket.status)
 
-                // TicketOrder'ları listelemek için RecyclerView
+                // List ticketOrders
                 val rvOrders = findViewById<RecyclerView>(R.id.rvTicketOrders)
                 rvOrders.layoutManager = LinearLayoutManager(context)
                 rvOrders.adapter = TicketOrderAdapter(ticket.ticketOrders)
             }
         }
 
-        // Kapatma butonu
+        //Close button
         view.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
             dismiss()
         }

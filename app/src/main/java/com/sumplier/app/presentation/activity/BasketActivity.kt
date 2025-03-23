@@ -155,6 +155,7 @@ class BasketActivity : AppCompatActivity() {
                     quantity = quantity,
                     price = product.price,
                     totalPrice = product.price * quantity,
+                    discountPrice = 0.0,
                     status = 0,
                     isChange = false,
                     newQuantity = 0.0,

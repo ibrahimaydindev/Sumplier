@@ -4,10 +4,14 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -31,6 +35,11 @@ class ConfirmationPopup : DialogFragment() {
     private var confirmationListener: ConfirmationListener? = null
     private var orderList: ArrayList<TicketOrder> = ArrayList();
     private var onSuccess: (() -> Unit)? = null
+    private var discountPrice: Double = 0.0
+    private lateinit var etDiscountPrice: EditText
+    private lateinit var tvDiscountError: TextView
+    private lateinit var btnApplyDiscount: ConstraintLayout
+    private var totalPrice: Double = 0.0
 
     private lateinit var tvTicketCode: TextView
 
@@ -45,6 +54,9 @@ class ConfirmationPopup : DialogFragment() {
         showPage(currentPage)
 
         tvTicketCode = view.findViewById(R.id.ticketCode)
+        etDiscountPrice = view.findViewById(R.id.etDiscountPrice)
+        tvDiscountError = view.findViewById(R.id.tvDiscountError)
+        btnApplyDiscount = view.findViewById(R.id.btnApplyDiscount)
 
         view.findViewById<ConstraintLayout>(R.id.btnYes)?.setOnClickListener {
             showProgress()
@@ -52,7 +64,7 @@ class ConfirmationPopup : DialogFragment() {
 
         }
 
-        view.findViewById<ConstraintLayout>(R.id.btnNo)?.setOnClickListener {
+        view.findViewById<ConstraintLayout>(R.id.btnTakePayment)?.setOnClickListener {
             dismiss()
         }
 
@@ -60,26 +72,64 @@ class ConfirmationPopup : DialogFragment() {
             dismiss()
         }
 
+        view.findViewById<ConstraintLayout>(R.id.btnDiscount)?.setOnClickListener {
+            currentPage = 4
+            showPage(currentPage)
+        }
+
+        view.findViewById<ConstraintLayout>(R.id.btnApplyDiscount)?.setOnClickListener {
+            val discountText = etDiscountPrice.text.toString()
+            if (discountText.isNotEmpty()) {
+                discountPrice = discountText.toDouble()
+            }
+            currentPage = 0
+            showPage(currentPage)
+        }
+
+        calculateTotalPrice()
+
+        etDiscountPrice.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            
+            override fun afterTextChanged(s: Editable?) {
+                validateDiscountAmount(s?.toString())
+            }
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createSendOrder() {
-
         val formatter = DateTimeFormatter.ofPattern(DateFormat.CLOUD_FORMAT.pattern)
-
         val createDateTime = LocalDateTime.now().format(formatter)
         val modifiedDateTime = LocalDateTime.now().format(formatter)
+
+        // İndirim oranını hesapla
+        val discountRate = if (totalPrice > 0) discountPrice / totalPrice else 0.0
 
         // Calculate prices...
         var totalPrice = 0.0
         var generalTotal = 0.0
         var taxTotal = 0.0
 
-        for (order:TicketOrder in orderList){
+
+        val finalOrders:ArrayList<TicketOrder> = ArrayList()
+
+        for (order in orderList) {
+
+            //Calculate the exact discount...
+            val orderDiscountAmount = order.totalPrice * discountRate
 
             totalPrice += order.totalPrice
-            generalTotal += order.totalPrice //TODO
+
+            // Calculate the order new price
+            order.discountPrice = orderDiscountAmount
+            order.totalPrice -= orderDiscountAmount
+
+            generalTotal += order.totalPrice
             taxTotal = (order.totalPrice / 100) * 10
+
+            finalOrders.add(order)
 
         }
 
@@ -93,23 +143,23 @@ class ConfirmationPopup : DialogFragment() {
             total = totalPrice,
             taxTotal = taxTotal,
             generalTotal = generalTotal,
+            discountTotal = discountPrice,
             paymentType = "CASH",
             description = "CASH PAID",
             status = 0,
             resellerCode = Config.getInstance().getCurrentCompany().resellerCode,
             accountCode = currentAccount.accountCode,
             deviceCode = "DEV001",
-            ticketOrders = orderList,
+            ticketOrders = finalOrders,
             accountName = currentAccount.accountName,
             paymentStatus = 0
-
         )
 
         val ticketApiManager = TicketApiManager()
 
         try {
             ticketApiManager.postTicket(ticket) {
-                confirmationListener?.onConfirmed(orderList)
+                confirmationListener?.onConfirmed(finalOrders)
 
                 tvTicketCode.text = it.toString()
 
@@ -125,10 +175,11 @@ class ConfirmationPopup : DialogFragment() {
             findViewById<ViewGroup>(R.id.progressPage)?.visibility = if (pageIndex == 1) View.VISIBLE else View.GONE
             findViewById<ViewGroup>(R.id.successPage)?.visibility = if (pageIndex == 2) View.VISIBLE else View.GONE
             findViewById<ViewGroup>(R.id.failPage)?.visibility = if (pageIndex == 3) View.VISIBLE else View.GONE
+            findViewById<ViewGroup>(R.id.discountPage)?.visibility = if (pageIndex == 4) View.VISIBLE else View.GONE
         }
     }
 
-    fun showProgress() {
+    private fun showProgress() {
         currentPage = 1
         showPage(currentPage)
     }
@@ -170,5 +221,34 @@ class ConfirmationPopup : DialogFragment() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
+    }
+
+    private fun calculateTotalPrice() {
+        totalPrice = 0.0
+        for (order in orderList) {
+            totalPrice += order.totalPrice
+        }
+    }
+    
+    private fun validateDiscountAmount(discountText: String?) {
+        if (discountText.isNullOrEmpty()) {
+            tvDiscountError.visibility = View.GONE
+            btnApplyDiscount.isEnabled = false
+            return
+        }
+        
+        try {
+            val discountAmount = discountText.toDouble()
+            if (discountAmount > totalPrice) {
+                tvDiscountError.visibility = View.VISIBLE
+                btnApplyDiscount.isEnabled = false
+            } else {
+                tvDiscountError.visibility = View.GONE
+                btnApplyDiscount.isEnabled = true
+            }
+        } catch (e: NumberFormatException) {
+            tvDiscountError.visibility = View.GONE
+            btnApplyDiscount.isEnabled = false
+        }
     }
 }

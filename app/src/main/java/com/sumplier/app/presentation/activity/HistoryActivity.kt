@@ -87,7 +87,6 @@ class HistoryActivity : AppCompatActivity() {
         val ticketApiManager = TicketApiManager()
         val currentCompany = Config.getInstance().getCurrentCompany()
 
-        // Tarih formatı
         val dateFormat =
             SimpleDateFormat(DateFormat.CLOUD_REQUEST_FORMAT.pattern, Locale.getDefault()).apply {
                 timeZone = TimeZone.getTimeZone("Europe/Istanbul")

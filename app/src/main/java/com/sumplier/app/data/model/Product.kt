@@ -7,6 +7,7 @@ class Product(
     val productCode: Long,
     val productName: String,
     val price: Double,
+    var barcode:String?,
     val price2: Double,
     val price3: Double,
     val taxRate: Double,
